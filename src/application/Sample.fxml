@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="531.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="24.0" layoutY="23.0" mnemonicParsing="false" text="Play" />
+      <ListView layoutX="24.0" layoutY="58.0" prefHeight="408.0" prefWidth="391.0" />
+      <TextArea layoutX="441.0" layoutY="58.0" prefHeight="408.0" prefWidth="240.0" />
+      <TextField layoutX="141.0" layoutY="23.0" prefHeight="27.0" prefWidth="272.0" />
+      <TextField layoutX="441.0" layoutY="23.0" prefHeight="27.0" prefWidth="240.0" />
+      <Button layoutX="83.0" layoutY="23.0" mnemonicParsing="false" text="Stop" />
+      <ImageView fitHeight="44.0" fitWidth="90.0" layoutX="1.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</Pane>
