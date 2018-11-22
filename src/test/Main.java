@@ -1,8 +1,12 @@
 package test;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -13,15 +17,24 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-	public static void main(final String... args) throws InterruptedException, ExecutionException {
+	public static void main(final String... args)
+			throws InterruptedException, ExecutionException, UnknownHostException, IOException {
 		final ExecutorService es = Executors.newFixedThreadPool(1000);
 		final int timeout = 100;
 		final List<Future<ScanResult>> futures = new ArrayList<>();
-		List<String> ipRange = getIpList("127.0.0.1", 10);
+		List<String> ipRange = getIpList("127.0.0.0", 10);
 		for (String ipaddr : ipRange) {
-			System.out.println("SCANNING... " + ipaddr);
-			for (int port = 1; port <= 65535; port++) {
-				futures.add(portIsOpen(es, ipaddr, port, timeout));
+			InetAddress inet = InetAddress.getByName(ipaddr);
+			long finish = 0;
+			long start = new GregorianCalendar().getTimeInMillis();
+			if (inet.isReachable(2000)) {
+				finish = new GregorianCalendar().getTimeInMillis();
+				System.out.println(ipaddr + " :Pinged successfully in " + (finish - start + "ms"));
+				for (int port = 1; port <= 65535; port++) {
+					futures.add(portIsOpen(es, ipaddr, port, timeout));
+				}
+			} else {
+				System.out.println(ipaddr + " :Ping failed.");
 			}
 		}
 		es.awaitTermination(200L, TimeUnit.MILLISECONDS);
@@ -32,10 +45,6 @@ public class Main {
 				System.out.println(f.get().getIp() + " with " + f.get().getPort() + " Port.");
 			}
 		}
-
-		// System.out.println("There are " + openPorts + " open ports on host "
-		// + ip + " (probed with a timeout of "
-		// + timeout + "ms)");
 	}
 
 	public static Future<ScanResult> portIsOpen(final ExecutorService es, final String ip, final int port,
