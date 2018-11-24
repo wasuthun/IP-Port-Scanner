@@ -60,10 +60,10 @@ public class Main {
 
 	public static String ping(String host) {
 		PingStrategy pingStategy;
-		if (PlatformUtil.isMac()) {
-			pingStategy = new MacOS(host);
-		} else {
+		if (PlatformUtil.isWindows()) {
 			pingStategy = new Windows(host);
+		} else {
+			pingStategy = new MacOS(host);
 		}
 		return pingStategy.ping();
 	}
@@ -83,6 +83,69 @@ public class Main {
 				}
 			}
 		});
+	}
+
+	public static final String nextIpAddress(final String input) {
+		final String[] tokens = input.split("\\.");
+		if (tokens.length != 4)
+			throw new IllegalArgumentException();
+		for (int i = tokens.length - 1; i >= 0; i--) {
+			final int item = Integer.parseInt(tokens[i]);
+			if (item < 255) {
+				tokens[i] = String.valueOf(item + 1);
+				for (int j = i + 1; j < 4; j++) {
+					tokens[j] = "0";
+				}
+				break;
+			}
+		}
+		return new StringBuilder().append(tokens[0]).append('.').append(tokens[1]).append('.').append(tokens[2])
+				.append('.').append(tokens[3]).toString();
+	}
+
+	public static List<String> getIpList(String startIp, String endIp) {
+		List<String> result = new ArrayList<>();
+		String currentIp = startIp;
+		result.add(startIp);
+		while (!currentIp.equals(endIp)) {
+			String nextIp = nextIpAddress(currentIp);
+			result.add(nextIp);
+			currentIp = nextIp;
+		}
+		return result;
+	}
+
+	public static class ScanResult {
+		private String ipaddr;
+		private int port;
+		private boolean isOpen;
+
+		public ScanResult(String ipaddr, int port, boolean isOpen) {
+			super();
+			this.ipaddr = ipaddr;
+			this.port = port;
+			this.isOpen = isOpen;
+		}
+
+		public int getPort() {
+			return port;
+		}
+
+		public String getIp() {
+			return this.ipaddr;
+		}
+
+		public void setPort(int port) {
+			this.port = port;
+		}
+
+		public boolean isOpen() {
+			return isOpen;
+		}
+
+		public void setOpen(boolean isOpen) {
+			this.isOpen = isOpen;
+		}
 	}
 
 	public static abstract class PingStrategy {
@@ -150,69 +213,6 @@ public class Main {
 			} catch (Exception e) {
 				return "Can't convert String to Integer.";
 			}
-		}
-	}
-
-	public static final String nextIpAddress(final String input) {
-		final String[] tokens = input.split("\\.");
-		if (tokens.length != 4)
-			throw new IllegalArgumentException();
-		for (int i = tokens.length - 1; i >= 0; i--) {
-			final int item = Integer.parseInt(tokens[i]);
-			if (item < 255) {
-				tokens[i] = String.valueOf(item + 1);
-				for (int j = i + 1; j < 4; j++) {
-					tokens[j] = "0";
-				}
-				break;
-			}
-		}
-		return new StringBuilder().append(tokens[0]).append('.').append(tokens[1]).append('.').append(tokens[2])
-				.append('.').append(tokens[3]).toString();
-	}
-
-	public static List<String> getIpList(String startIp, String endIp) {
-		List<String> result = new ArrayList<>();
-		String currentIp = startIp;
-		result.add(startIp);
-		while (!currentIp.equals(endIp)) {
-			String nextIp = nextIpAddress(currentIp);
-			result.add(nextIp);
-			currentIp = nextIp;
-		}
-		return result;
-	}
-
-	public static class ScanResult {
-		private String ipaddr;
-		private int port;
-		private boolean isOpen;
-
-		public ScanResult(String ipaddr, int port, boolean isOpen) {
-			super();
-			this.ipaddr = ipaddr;
-			this.port = port;
-			this.isOpen = isOpen;
-		}
-
-		public int getPort() {
-			return port;
-		}
-
-		public String getIp() {
-			return this.ipaddr;
-		}
-
-		public void setPort(int port) {
-			this.port = port;
-		}
-
-		public boolean isOpen() {
-			return isOpen;
-		}
-
-		public void setOpen(boolean isOpen) {
-			this.isOpen = isOpen;
 		}
 	}
 }
