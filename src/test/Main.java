@@ -56,7 +56,7 @@ public class Main {
 
 	}
 
-	public static int ping(String host) {
+	public static String ping(String host) {
 		PingStrategy pingStategy;
 		if (PlatformUtil.isMac()) {
 			pingStategy = new MacOS(host);
@@ -95,7 +95,7 @@ public class Main {
 			this.host = host;
 		}
 
-		public int ping() {
+		public String ping() {
 			try {
 				Runtime r = Runtime.getRuntime();
 				System.out.println("Sending Ping Request to " + host);
@@ -109,14 +109,14 @@ public class Main {
 						return getPing(m.group(1));
 				}
 				in.close();
-				return -1;
+				return "ping command is not supported.";
 			} catch (Exception e) {
 				e.printStackTrace();
-				return -1;
+				return "ping error.";
 			}
 		}
 
-		public abstract int getPing(String line);
+		public abstract String getPing(String line);
 
 	}
 
@@ -127,8 +127,12 @@ public class Main {
 		}
 
 		@Override
-		public int getPing(String line) {
-			return Integer.parseInt(line.split("/")[1]);
+		public String getPing(String line) {
+			try {
+				return Integer.parseInt(line.split("/")[1]) + "ms";
+			} catch (Exception e) {
+				return "Can't convert String to Integer.";
+			}
 		}
 	}
 
@@ -139,8 +143,12 @@ public class Main {
 		}
 
 		@Override
-		public int getPing(String line) {
-			return Integer.parseInt(line);
+		public String getPing(String line) {
+			try {
+				return Integer.parseInt(line) + "ms";
+			} catch (Exception e) {
+				return "Can't convert String to Integer.";
+			}
 		}
 	}
 
