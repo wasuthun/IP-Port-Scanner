@@ -43,6 +43,7 @@ public class Main {
 		for (final Future<ScanResult> f : futures) {
 			if (f.get().isOpen()) {
 				openPorts++;
+
 				System.out.println(f.get().getIp() + " with " + f.get().getPort() + " Port.");
 			}
 		}
@@ -58,38 +59,13 @@ public class Main {
 	}
 
 	public static int ping(String host) {
-		Pattern pattern;
-		String command;
+		PingStrategy pingStategy;
 		if (PlatformUtil.isMac()) {
-			pattern = Pattern.compile("min/avg/max/stddev = (\\S+)");
-			command = "ping -c 1 ";
+			pingStategy = new MacOS(host);
 		} else {
-			pattern = Pattern.compile("Average = (\\d+)");
-			command = "ping -n 1 ";
+			pingStategy = new Windows(host);
 		}
-		Matcher m = null;
-		try {
-			Runtime r = Runtime.getRuntime();
-			System.out.println("Sending Ping Request to " + host);
-			Process p = r.exec(command + host);
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String inputLine;
-			while ((inputLine = in.readLine()) != null) {
-				m = pattern.matcher(inputLine);
-				if (m.find()) {
-					if (PlatformUtil.isMac()) {
-						return (int) ( Double.parseDouble( (m.group(1).split("/"))[1] ) );
-					} else {
-						return Integer.parseInt(m.group(1));
-					}
-				}
-			}
-			in.close();
-			return -1;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return -1;
-		}
+		return pingStategy.ping();
 	}
 
 	public static Future<ScanResult> portIsOpen(final ExecutorService es, final String ip, final int port,
@@ -107,6 +83,67 @@ public class Main {
 				}
 			}
 		});
+	}
+
+	public static abstract class PingStrategy {
+
+		private Pattern pattern;
+		private String command;
+		private String host;
+
+		public PingStrategy(String host, String regex, String command) {
+			this.pattern = Pattern.compile(regex);
+			this.command = command;
+			this.host = host;
+		}
+
+		public int ping() {
+			try {
+				Runtime r = Runtime.getRuntime();
+				System.out.println("Sending Ping Request to " + host);
+				Process p = r.exec(command + host);
+				Matcher m = null;
+				BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				String inputLine;
+				while ((inputLine = in.readLine()) != null) {
+					m = pattern.matcher(inputLine);
+					if (m.find())
+						return getPing(m.group(1));
+				}
+				in.close();
+				return -1;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+
+		public abstract int getPing(String line);
+
+	}
+
+	public static class MacOS extends PingStrategy {
+
+		public MacOS(String host) {
+			super(host, "min/avg/max/stddev = (\\S+)", "ping -c 1 ");
+		}
+
+		@Override
+		public int getPing(String line) {
+			return (int) ( Double.parseDouble( (line.split("/"))[1] ));
+		}
+	}
+
+	public static class Windows extends PingStrategy {
+
+		public Windows(String host) {
+			super(host, "Average = (\\d+)", "ping -n 1 ");
+		}
+
+		@Override
+		public int getPing(String line) {
+			return Integer.parseInt(line);
+		}
 	}
 
 	public static final String nextIpAddress(final String input) {
@@ -170,7 +207,5 @@ public class Main {
 		public void setOpen(boolean isOpen) {
 			this.isOpen = isOpen;
 		}
-
 	}
-
 }
