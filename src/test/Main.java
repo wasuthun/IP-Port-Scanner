@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.javafx.PlatformUtil;
+
 public class Main {
 
 	public static void main(final String... args) throws InterruptedException, ExecutionException {
@@ -54,23 +56,38 @@ public class Main {
 	}
 
 	public static int ping(String host) {
-		Pattern pattern = Pattern.compile("Average = (\\d+)ms");
+		Pattern pattern;
+		String command;
+		if (PlatformUtil.isMac()) {
+			pattern = Pattern.compile("min/avg/max/stddev = (\\S+)");
+			command = "ping -c 1 ";
+		} else {
+			pattern = Pattern.compile("Average = (\\d+)");
+			command = "ping -n 1 ";
+		}
 		Matcher m = null;
 		try {
 			Runtime r = Runtime.getRuntime();
 			System.out.println("Sending Ping Request to " + host);
-			Process p = r.exec("ping -n 1 " + host);
+			Process p = r.exec(command + host);
 			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
 				m = pattern.matcher(inputLine);
 				if (m.find()) {
-					return Integer.parseInt(m.group(1));
+					System.out.println(m.group(1) + " sEIEI");
+					if (PlatformUtil.isMac()) {
+						return Integer.parseInt(m.group(1).split("/")[1]);
+					} else {
+						return Integer.parseInt(m.group(1));
+					}
 				}
 			}
+
 			in.close();
 			return -1;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return -1;
 		}
 	}
