@@ -25,12 +25,14 @@ public class Main {
 		final int timeout = 100;
 		final List<Future<ScanResult>> futures = new ArrayList<>();
 		List<String> ipRange = getIpList("127.0.0.0", "127.0.0.1");
+		
 		for (String ipaddr : ipRange) {
 			if (isReadable(ipaddr)) {
 				System.out.println("ping: " + ping(ipaddr));
 				for (int port = 1; port <= 65535; port++) {
 					futures.add(portIsOpen(es, ipaddr, port, timeout));
 				}
+				
 			} else {
 				System.out.println(ipaddr + " is not reachable");
 			}
