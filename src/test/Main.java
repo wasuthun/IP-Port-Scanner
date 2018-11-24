@@ -6,7 +6,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -23,9 +25,8 @@ public class Main {
 	public static void main(final String... args) throws InterruptedException, ExecutionException {
 		final ExecutorService es = Executors.newFixedThreadPool(1000);
 		final int timeout = 100;
-		final List<Future<ScanResult>> futures = new ArrayList<>();
+		List<Future<ScanResult>> futures = new ArrayList<>();
 		List<String> ipRange = getIpList("127.0.0.0", "127.0.0.1");
-
 		for (String ipaddr : ipRange) {
 			if (isReadable(ipaddr)) {
 				System.out.println("ping: " + ping(ipaddr));
@@ -40,11 +41,35 @@ public class Main {
 		es.awaitTermination(200L, TimeUnit.MILLISECONDS);
 
 		int openPorts = 0;
+		Map<String, List<String>> mapping = new HashMap<>();
 		for (final Future<ScanResult> f : futures) {
 			if (f.get().isOpen()) {
 				openPorts++;
 
-				System.out.println(f.get().getIp() + " with " + f.get().getPort() + " Port.");
+				// System.out.println(f.get().getIp() + " with " + f.get().getPort() + " Port.");
+				
+				// Added code from Jamie
+				
+				String ip = f.get().getIp();
+				String port =  f.get().getPort() + "";
+				
+				// If mapping contains current IP
+				if( mapping.containsKey(ip) ) {
+					mapping.get( ip ).add( port );
+				}
+				else {
+					List<String> listOfPorts = new ArrayList<>();
+					listOfPorts.add( port + "" );
+					mapping.put(ip, listOfPorts);
+				}
+			}
+		}
+		
+		for( int i = 0 ; i < mapping.size() ; i++ ) {
+			String currentIP = (String) (mapping.keySet()).toArray()[0];
+			List<String> listOfPort = mapping.get( currentIP );
+			for( int j = 0 ; j < listOfPort.size() ; j++ ) {
+				System.out.println(currentIP + " with " + listOfPort.get(j) + " Port.");
 			}
 		}
 	}
