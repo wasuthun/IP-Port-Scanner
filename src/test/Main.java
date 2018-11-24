@@ -75,15 +75,13 @@ public class Main {
 			while ((inputLine = in.readLine()) != null) {
 				m = pattern.matcher(inputLine);
 				if (m.find()) {
-					System.out.println(m.group(1) + " sEIEI");
 					if (PlatformUtil.isMac()) {
-						return Integer.parseInt(m.group(1).split("/")[1]);
+						return (int) ( Double.parseDouble( (m.group(1).split("/"))[1] ) );
 					} else {
 						return Integer.parseInt(m.group(1));
 					}
 				}
 			}
-
 			in.close();
 			return -1;
 		} catch (Exception e) {
