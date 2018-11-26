@@ -13,19 +13,19 @@ import javafx.scene.layout.HBox;
 import javafx.fxml.FXMLLoader;
 
 /**
- * Create a JavaFX user interface with 1 input view
- * and 2 observers that show the counter value, so that all
- * the views refer to the same Counter object.
+ * Create a JavaFX user interface with 1 input view and 2 observers that show
+ * the counter value, so that all the views refer to the same Counter object.
  * 
  */
 public class Main extends Application {
 	private SampleController controller;
+
 	/**
 	 * Initialize of fxml for start application
 	 */
 	@Override
 	public void start(Stage primaryStage) {
-		NetworkScanner network = new NetworkScanner("127.0.0.1", "127.0.0.3", 0, 60000);
+		NetworkScanner network = new NetworkScanner("127.0.0.1", "127.0.0.3", 0, 1000);
 		try {
 			URL url = getClass().getResource("Sample.fxml");
 			if (url == null) {
@@ -35,28 +35,27 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader(url);
 			Parent root = loader.load();
 			controller = loader.getController();
-			controller.setNetworkScanner(network);;
+			controller.setNetworkScanner(network);
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.sizeToScene();
 			primaryStage.setTitle("Network");
 			primaryStage.show();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
-		ConsoleView console=new ConsoleView(network);
-		network.addObserver(console);
-		controller.show(console);
-	
-		
+		NetworkObserver observer = new NetworkObserver(network);
+		controller.show(observer);
 	}
+
 	/**
 	 * Launch program
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 }

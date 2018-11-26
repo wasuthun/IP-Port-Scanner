@@ -20,7 +20,8 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <ListView fx:id="view" layoutX="24.0" layoutY="109.0" prefHeight="385.0" prefWidth="391.0" />
+      <ListView fx:id="view" onMouseClicked="#handleMouseClick" layoutX="24.0" layoutY="109.0" prefHeight="385.0" prefWidth="391.0" />
+      
       <TextArea layoutX="441.0" layoutY="109.0" prefHeight="385.0" prefWidth="240.0" />
       <TextField layoutX="24.0" layoutY="67.0" prefHeight="27.0" prefWidth="391.0" />
       <TextField layoutX="441.0" layoutY="67.0" prefHeight="27.0" prefWidth="240.0" />

@@ -28,13 +28,10 @@ public class NetworkScanner extends Observable {
 		this.fromPort = fromPort;
 		this.toPort = toPort;
 	}
-	public NetworkScanner() {
-		
-	}
 
 	public void scan() throws InterruptedException, ExecutionException {
 
-		final ExecutorService es = Executors.newFixedThreadPool(1000);
+		final ExecutorService es = Executors.newFixedThreadPool(500);
 		final int timeout = 100;
 		List<Future<ScanResult>> futures = new ArrayList<>();
 		List<String> ipRange = getIpList(fromIp, toIp);
