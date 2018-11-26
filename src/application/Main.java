@@ -35,7 +35,6 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader(url);
 			Parent root = loader.load();
 			controller = loader.getController();
-			
 			controller.setNetworkScanner(network);;
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
@@ -49,7 +48,6 @@ public class Main extends Application {
 		ConsoleView console=new ConsoleView(network);
 		network.addObserver(console);
 		controller.show(console);
-		Platform.setImplicitExit(false);
 	
 		
 	}

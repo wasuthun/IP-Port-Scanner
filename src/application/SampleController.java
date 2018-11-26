@@ -17,10 +17,12 @@ public class SampleController {
 	private Button Play;
 	@FXML
 	private ListView<ScanResult> view;
-
+	@FXML
+	private Button Stop;
 	private Thread scan_thread;
 	private NetworkScanner scanner;
-	
+	@FXML
+	private Button Pause;
 	
 	public void play(ActionEvent e) {
 		System.out.println("varit");
@@ -40,6 +42,7 @@ public class SampleController {
 	public void setNetworkScanner(NetworkScanner scanner) {
 		this.scanner=scanner;
 	}
+	
 	public void show(ConsoleView console) {
 		//System.out.println(console.getList());
 		view.setItems(console.getList());
@@ -51,6 +54,17 @@ public class SampleController {
 	                }
 	            }
 	        );
+	}
+	public void pause(ActionEvent e){
+		System.out.println("Pause");
+	}
+	public void stop(ActionEvent e) {
+		System.out.println("Stop");
+		if (scan_thread != null) {
+		}else {
+			System.out.println("null");
+		}
+
 	}
 	static class RectCell extends ListCell<ScanResult> {
         @Override
