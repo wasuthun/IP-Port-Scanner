@@ -5,11 +5,13 @@ import java.util.concurrent.ExecutionException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import util.NetworkScanner;
@@ -23,10 +25,12 @@ public class SampleController {
 	private ListView<Integer> view2;
 	@FXML
 	private Button Stop;
-	private Thread scan_thread;
+	private Task<Void> scan_thread;
 	private NetworkScanner scanner;
 	@FXML
 	private Button Pause;
+	@FXML
+	private ProgressBar bar;
 
 	@FXML
 	public void handleMouseClick(MouseEvent arg0) {
@@ -51,17 +55,30 @@ public class SampleController {
 
 	public void play(ActionEvent e) {
 		System.out.println("varit");
-		scan_thread = new Thread(new Runnable() {
+//		scan_thread = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					scanner.scan();
+//				} catch (InterruptedException | ExecutionException exception) {
+//					exception.printStackTrace();
+//				}
+//			}
+//		});
+		scan_thread= new Task<Void>() {
+
 			@Override
-			public void run() {
+			protected Void call() throws Exception {
 				try {
 					scanner.scan();
 				} catch (InterruptedException | ExecutionException exception) {
 					exception.printStackTrace();
 				}
+				return null;
 			}
-		});
-		scan_thread.start();
+		};
+		bar.progressProperty().bind(scan_thread.progressProperty());
+		new Thread(scan_thread).start();
 
 	}
 

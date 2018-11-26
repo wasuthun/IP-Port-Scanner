@@ -15,7 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.sun.javafx.PlatformUtil;
 
-public class NetworkScanner extends Observable {
+
+public class NetworkScanner extends Observable{
 
 	private String fromIp;
 	private String toIp;
