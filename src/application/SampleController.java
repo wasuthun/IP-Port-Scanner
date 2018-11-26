@@ -1,7 +1,10 @@
 package application;
 
+
 import java.util.concurrent.ExecutionException;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,6 +20,8 @@ public class SampleController {
 	@FXML
 	private ListView<DisplayResult> view;
 	@FXML
+	private ListView<Integer> view2;
+	@FXML
 	private Button Stop;
 	private Thread scan_thread;
 	private NetworkScanner scanner;
@@ -26,6 +31,22 @@ public class SampleController {
 	@FXML
 	public void handleMouseClick(MouseEvent arg0) {
 		System.out.println("clicked on " + view.getSelectionModel().getSelectedItem());
+		System.out.println( view.getSelectionModel().getSelectedItem().getClass());
+		ObservableList<Integer> list = FXCollections.observableArrayList();
+		DisplayResult displayPort=view.getSelectionModel().getSelectedItem();
+		if(displayPort!=null) {
+			for (Integer port:displayPort.getPort()) {
+				list.add(port);
+			}
+			view2.setItems(list);
+			view2.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
+				@Override
+				public ListCell<Integer> call(ListView<Integer> list) {
+					return new UpdatePort();
+				}
+			});
+		}
+		
 	}
 
 	public void play(ActionEvent e) {
@@ -77,6 +98,15 @@ public class SampleController {
 			super.updateItem(item, empty);
 			if (item != null) {
 				setText(item.getIp());
+			}
+		}
+	}
+	private static class UpdatePort extends ListCell<Integer> {
+		@Override
+		public void updateItem(Integer item, boolean empty) {
+			super.updateItem(item, empty);
+			if (item != null) {
+				setText(item+"");
 			}
 		}
 	}
