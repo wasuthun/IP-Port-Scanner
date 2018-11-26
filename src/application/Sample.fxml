@@ -6,16 +6,32 @@
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
-      <Button fx:id="Play" layoutX="24.0" layoutY="23.0" mnemonicParsing="false" onAction="#play" text="Play" />
+      <Button fx:id="Play" layoutX="24.0" layoutY="23.0" mnemonicParsing="false" onAction="#play" text="Play">
+         <graphic>
+            <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/Play.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
       <ListView layoutX="24.0" layoutY="58.0" prefHeight="408.0" prefWidth="391.0" />
       <TextArea layoutX="441.0" layoutY="58.0" prefHeight="408.0" prefWidth="240.0" />
-      <TextField layoutX="141.0" layoutY="23.0" prefHeight="27.0" prefWidth="272.0" />
+      <TextField layoutX="191.0" layoutY="23.0" prefHeight="27.0" prefWidth="222.0" />
       <TextField layoutX="441.0" layoutY="23.0" prefHeight="27.0" prefWidth="240.0" />
-      <Button layoutX="83.0" layoutY="23.0" mnemonicParsing="false" text="Stop" />
+      <Button layoutX="106.0" layoutY="23.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="76.0" text="Stop">
+         <graphic>
+            <ImageView fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/Pause.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
       <ProgressBar layoutX="21.0" layoutY="498.0" prefHeight="20.0" prefWidth="660.0" progress="0.0" />
       <ScrollBar layoutX="24.0" layoutY="449.0" prefHeight="17.0" prefWidth="391.0" />
       <ScrollBar layoutX="396.0" layoutY="56.0" orientation="VERTICAL" prefHeight="392.0" prefWidth="17.0" />
