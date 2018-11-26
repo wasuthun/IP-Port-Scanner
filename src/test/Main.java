@@ -22,7 +22,7 @@ public class Main {
 		final ExecutorService es = Executors.newFixedThreadPool(1000);
 		final int timeout = 100;
 		final List<Future<ScanResult>> futures = new ArrayList<>();
-		List<String> ipRange = getIpList("127.0.0.0", "127.0.0.1");
+		List<String> ipRange = getIpList("127.0.0.0", "127.0.0.9");
 		for (String ipaddr : ipRange) {
 			if (isReadable(ipaddr)) {
 				System.out.println("ping: " + ping(ipaddr));
@@ -59,7 +59,7 @@ public class Main {
 		try {
 			Runtime r = Runtime.getRuntime();
 			System.out.println("Sending Ping Request to " + host);
-			Process p = r.exec("ping -n 1 " + host);
+			Process p = r.exec("ping -c 1 " + host);
 			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
