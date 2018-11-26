@@ -29,7 +29,7 @@
       <ScrollBar layoutX="398.0" layoutY="109.0" orientation="VERTICAL" prefHeight="369.0" prefWidth="17.0" />
       <ScrollBar layoutX="441.0" layoutY="477.0" prefHeight="17.0" prefWidth="240.0" />
       <ScrollBar layoutX="664.0" layoutY="109.0" orientation="VERTICAL" prefHeight="368.0" prefWidth="17.0" />
-      <Button fx:id="Stop" layoutX="225.0" layoutY="24.0" mnemonicParsing="false" onAction="#Stop" prefHeight="32.0" prefWidth="74.0" text="Stop">
+      <Button fx:id="Stop" layoutX="225.0" layoutY="24.0" mnemonicParsing="false" onAction="#stop" prefHeight="32.0" prefWidth="74.0" text="Stop">
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -38,7 +38,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="Pause" layoutX="123.0" layoutY="24.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="87.0" text="Pause">
+      <Button fx:id="Pause" layoutX="123.0" layoutY="24.0" mnemonicParsing="false" onAction="#pause" prefHeight="32.0" prefWidth="87.0" text="Pause">
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                <image>
