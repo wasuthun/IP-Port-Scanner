@@ -19,6 +19,7 @@ import javafx.fxml.FXMLLoader;
  * 
  */
 public class Main extends Application {
+	private SampleController controller;
 	/**
 	 * Initialize of fxml for start application
 	 */
@@ -33,10 +34,9 @@ public class Main extends Application {
 			}
 			FXMLLoader loader = new FXMLLoader(url);
 			Parent root = loader.load();
-			SampleController controller = loader.getController();
+			controller = loader.getController();
 			
 			controller.setNetworkScanner(network);;
-
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.sizeToScene();
@@ -48,6 +48,8 @@ public class Main extends Application {
 		}
 		ConsoleView console=new ConsoleView(network);
 		network.addObserver(console);
+		controller.show(console);
+		Platform.setImplicitExit(false);
 	
 		
 	}
