@@ -3,7 +3,9 @@ package application;
 import java.util.Observable;
 import java.util.Observer;
 
+import jdk.nashorn.internal.runtime.regexp.joni.ScanEnvironment;
 import util.NetworkScanner;
+import util.ScanResult;
 
 public class ConsoleView implements Observer{
 	
@@ -14,9 +16,8 @@ public class ConsoleView implements Observer{
 	}
 	@Override
 	public void update(Observable o, Object arg) {
-		if(arg!=null)
-			System.out.println(arg);
-		System.out.printf("Count : \n");
+		ScanResult s = (ScanResult) arg;
+		System.out.printf("%s with %s Port \n",s.getIp(),s.getPort());
 	}
 
 }
