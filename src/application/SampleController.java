@@ -1,12 +1,14 @@
 package application;
 
-import java.util.concurrent.ExecutionException;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import util.NetworkScanner;
@@ -17,26 +19,49 @@ public class SampleController {
 	@FXML
 	private ListView<DisplayResult> view;
 	@FXML
+	private ListView<Integer> view2;
+	@FXML
 	private Button Stop;
-	private Thread scan_thread;
+	private Task<Void> scan_thread;
 	private NetworkScanner scanner;
 	@FXML
 	private Button Pause;
+	@FXML
+	private ProgressBar bar;
 
 	@FXML
 	public void handleMouseClick(MouseEvent arg0) {
 		System.out.println("clicked on " + view.getSelectionModel().getSelectedItem());
+		System.out.println(view.getSelectionModel().getSelectedItem().getClass());
+		ObservableList<Integer> list = FXCollections.observableArrayList();
+		DisplayResult displayPort = view.getSelectionModel().getSelectedItem();
+		if (displayPort != null) {
+			for (Integer port : displayPort.getPort()) {
+				list.add(port);
+			}
+			view2.setItems(list);
+			view2.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
+				@Override
+				public ListCell<Integer> call(ListView<Integer> list) {
+					return new UpdatePort();
+				}
+			});
+		}
+
 	}
 
 	public void play(ActionEvent e) {
 		System.out.println("varit");
-		scan_thread = new Thread(new Runnable() {
+		scan_thread = new Task<Void>() {
 			@Override
-			public void run() {
+			protected Void call() throws Exception {
 				scanner.scan();
+				return null;
 			}
-		});
-		scan_thread.start();
+		};
+		bar.progressProperty().bind(scan_thread.progressProperty());
+		new Thread(scan_thread).start();
+
 	}
 
 	public void setNetworkScanner(NetworkScanner scanner) {
@@ -59,7 +84,7 @@ public class SampleController {
 
 	public void stop(ActionEvent e) {
 		scanner.stop();
-		
+
 	}
 
 	private static class Update extends ListCell<DisplayResult> {
@@ -68,6 +93,16 @@ public class SampleController {
 			super.updateItem(item, empty);
 			if (item != null) {
 				setText(item.getIp());
+			}
+		}
+	}
+
+	private static class UpdatePort extends ListCell<Integer> {
+		@Override
+		public void updateItem(Integer item, boolean empty) {
+			super.updateItem(item, empty);
+			if (item != null) {
+				setText(item + "");
 			}
 		}
 	}

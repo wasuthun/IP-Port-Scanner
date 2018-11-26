@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 import util.NetworkScanner;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.fxml.FXMLLoader;
 
 /**
@@ -26,6 +24,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		NetworkScanner network = new NetworkScanner("127.0.0.1", "127.0.1.5", 0, 0);
+
 		try {
 			URL url = getClass().getResource("Sample.fxml");
 			if (url == null) {
