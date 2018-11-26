@@ -33,15 +33,10 @@ public class SampleController {
 		scan_thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				try {
-					scanner.scan();
-				} catch (InterruptedException | ExecutionException exception) {
-					exception.printStackTrace();
-				}
+				scanner.scan();
 			}
 		});
 		scan_thread.start();
-
 	}
 
 	public void setNetworkScanner(NetworkScanner scanner) {
@@ -63,12 +58,8 @@ public class SampleController {
 	}
 
 	public void stop(ActionEvent e) {
-		System.out.println("Stop");
-		if (scan_thread != null) {
-		} else {
-			System.out.println("null");
-		}
-
+		scanner.stop();
+		
 	}
 
 	private static class Update extends ListCell<DisplayResult> {

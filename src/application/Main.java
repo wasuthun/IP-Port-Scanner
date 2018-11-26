@@ -25,7 +25,7 @@ public class Main extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) {
-		NetworkScanner network = new NetworkScanner("127.0.0.1", "127.0.0.3", 0, 1000);
+		NetworkScanner network = new NetworkScanner("127.0.0.1", "127.0.1.5", 0, 0);
 		try {
 			URL url = getClass().getResource("Sample.fxml");
 			if (url == null) {

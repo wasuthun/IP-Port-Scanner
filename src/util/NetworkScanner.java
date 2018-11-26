@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -21,40 +20,64 @@ public class NetworkScanner extends Observable {
 	private String toIp;
 	private int fromPort;
 	private int toPort;
+	private boolean isRunning;
+	List<Future<ScanResult>> futures;
 
 	public NetworkScanner(String fromIp, String toIp, int fromPort, int toPort) {
+		this.isRunning = false;
 		this.fromIp = fromIp;
 		this.toIp = toIp;
 		this.fromPort = fromPort;
 		this.toPort = toPort;
 	}
 
-	public void scan() throws InterruptedException, ExecutionException {
-
-		final ExecutorService es = Executors.newFixedThreadPool(500);
-		final int timeout = 100;
-		List<Future<ScanResult>> futures = new ArrayList<>();
-		List<String> ipRange = getIpList(fromIp, toIp);
-		for (String ipaddr : ipRange) {
-			if (isReachable(ipaddr)) {
-				System.out.println("ping: " + ping(ipaddr));
-				for (int port = fromPort; port <= toPort; port++) {
-					futures.add(portIsOpen(es, ipaddr, port, timeout));
+	public void scan() {
+		try {
+			this.isRunning = true;
+			final ExecutorService es = Executors.newFixedThreadPool(500);
+			int timeout = 100;
+			futures = new ArrayList<>();
+			List<String> ipRange = getIpList(fromIp, toIp);
+			for (String ipaddr : ipRange) {
+				if (!isRunning)
+					break;
+				if (isReachable(ipaddr)) {
+					System.out.println("ping: " + ping(ipaddr));
+					for (int port = fromPort; port <= toPort; port++) {
+						if (!isRunning)
+							break;
+						futures.add(portIsOpen(es, ipaddr, port, timeout));
+					}
+				} else {
+					System.out.println(ipaddr + " is not reachable");
 				}
-			} else {
-				System.out.println(ipaddr + " is not reachable");
 			}
+			es.awaitTermination(200L, TimeUnit.MILLISECONDS);
+
+			// int openPorts = 0;
+			// for (final Future<ScanResult> f : futures) {
+			// try {
+			// if (f.get().isOpen()) {
+			// openPorts++;
+			// System.out.println(f.get().getIp() + " with " + f.get().getPort()
+			// + " Port555.");
+			//
+			// }
+			// } catch (InterruptedException e) {
+			//
+			// } catch (ExecutionException e) {
+			//
+			// }
+			// }
+		} catch (InterruptedException e) {
+
 		}
-		es.awaitTermination(200L, TimeUnit.MILLISECONDS);
-		int openPorts = 0;
+	}
+
+	public void stop() {
+		this.isRunning = false;
 		for (final Future<ScanResult> f : futures) {
-			if (f.get().isOpen()) {
-				openPorts++;
-				System.out.println(f.get().getIp() + " with " + f.get().getPort() + " Port.");
-				/* send Scan Result to UI */
-				setChanged();
-				notifyObservers(f.get());
-			}
+			f.cancel(true);
 		}
 	}
 
@@ -85,8 +108,13 @@ public class NetworkScanner extends Observable {
 					Socket socket = new Socket();
 					socket.connect(new InetSocketAddress(ip, port), timeout);
 					socket.close();
+					/* send Scan Result to UI */
+					setChanged();
+					notifyObservers(new ScanResult(ip, port, true));
 					return new ScanResult(ip, port, true);
-				} catch (Exception ex) {
+				} catch (Exception ex) {/* send Scan Result to UI */
+					setChanged();
+					notifyObservers(new ScanResult(ip, port, false));
 					return new ScanResult(ip, port, false);
 				}
 			}
