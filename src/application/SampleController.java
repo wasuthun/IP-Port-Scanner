@@ -75,6 +75,7 @@ public class SampleController {
 			Scene scene = new Scene(root);
 			creditStage.setScene(scene);
 			creditStage.sizeToScene();
+			creditStage.setResizable(false);
 			creditStage.setTitle("Credit By");
 			creditStage.show();
 		} catch (Exception e1) {
@@ -314,6 +315,7 @@ public class SampleController {
 		vBox.getChildren().addAll(tViewWellPort);
 		Scene scene = new Scene(vBox, 400, 270);
 		priStage.setScene(scene);
+		priStage.setResizable(false);
 		priStage.show();
 	}
 
@@ -335,6 +337,7 @@ public class SampleController {
 			Scene scene = new Scene(root);
 			stageConverter.setScene(scene);
 			stageConverter.sizeToScene();
+			stageConverter.setResizable(false);
 			stageConverter.setTitle("Convert DNS");
 			stageConverter.show();
 		} catch (Exception exception) {

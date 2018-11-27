@@ -37,6 +37,7 @@ public class Main extends Application {
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.sizeToScene();
+			primaryStage.setResizable(false);
 			primaryStage.setTitle("Network");
 			primaryStage.show();
 		} catch (Exception e) {
