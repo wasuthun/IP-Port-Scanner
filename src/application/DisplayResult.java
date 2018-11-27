@@ -23,7 +23,7 @@ public class DisplayResult {
 		return port;
 	}
 
-	public String getIp() {
+	public String getIpaddr() {
 		return this.ipaddr;
 	}
 

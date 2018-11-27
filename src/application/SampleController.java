@@ -1,10 +1,15 @@
 package application;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -19,6 +24,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import util.NetworkScanner;
@@ -27,15 +37,16 @@ public class SampleController {
 	@FXML
 	private Button Play;
 	@FXML
-	private ListView<DisplayResult> view;
-	@FXML
 	private ListView<Integer> view2;
 	@FXML
 	private Button Stop;
 	private Task<Void> scan_thread;
 	private NetworkScanner scanner;
 	@FXML
-	private Button Pause;
+	private Button Help;
+	@FXML
+	private Button dnsBt;
+
 	@FXML
 	private ProgressBar bar;
 	@FXML
@@ -45,6 +56,12 @@ public class SampleController {
 	@FXML
 	private Button credit;
 	private Stage creditStage = new Stage();
+
+	@FXML
+	private TableView<DisplayResult> tableViewLeft;
+
+	@FXML
+	private TableView<String> tableViewRight;
 
 	public void showCredit(ActionEvent e) {
 		try {
@@ -67,24 +84,30 @@ public class SampleController {
 	}
 
 	@FXML
+	public void initialize() {
+		Play.setDisable(false);
+		Stop.setDisable(true);
+	}
+
 	public void handleMouseClick(MouseEvent arg0) {
-		System.out.println("clicked on " + view.getSelectionModel().getSelectedItem());
-		System.out.println(view.getSelectionModel().getSelectedItem().getClass());
-		ObservableList<Integer> list = FXCollections.observableArrayList();
-		DisplayResult displayPort = view.getSelectionModel().getSelectedItem();
+		System.out.println("clicked on " + tableViewLeft.getSelectionModel().getSelectedItem());
+		System.out.println(tableViewLeft.getSelectionModel().getSelectedItem().getClass());
+		ObservableList<String> list = FXCollections.observableArrayList();
+		DisplayResult displayPort = tableViewLeft.getSelectionModel().getSelectedItem();
 		if (displayPort != null) {
-			view2.getItems().clear();
-			for (Integer port : displayPort.getPort()) {
-				list.add(port);
+			TableColumn<String, String> port = new TableColumn<>("Port");
+			List<String> ports = new ArrayList<>();
+			for (Integer s : tableViewLeft.getSelectionModel().getSelectedItem().getPort()) {
+				list.add(new String(s + ""));
+
 			}
-			Collections.sort(list, portOrder);
-			view2.setItems(list);
-			view2.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
-				@Override
-				public ListCell<Integer> call(ListView<Integer> list) {
-					return new UpdatePort();
-				}
-			});
+			System.out.println(list.toString());
+			port.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+			tableViewRight.getColumns().clear();
+
+			tableViewRight.setItems(list);
+			tableViewRight.getColumns().addAll(port);
+
 		}
 
 	}
@@ -126,6 +149,7 @@ public class SampleController {
 					int endPort = Integer.parseInt(inputPorts[1]);
 					// Scan only 1 IP between 2 Ports
 					scan_thread = new Task<Void>() {
+
 						@Override
 						protected Void call() throws Exception {
 							// scanner.scan(inputIP[0], inputIP[0], 0, 100);
@@ -194,29 +218,129 @@ public class SampleController {
 			System.out.println("Input IP is error, try again.");
 			text.setText("");
 		}
+		Play.setDisable(true);
+		Stop.setDisable(false);
+
 	}
 
 	public void setNetworkScanner(NetworkScanner scanner) {
 		this.scanner = scanner;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void show(NetworkObserver obs) {
-		view.setItems(obs.getList());
-		view.setCellFactory(new Callback<ListView<DisplayResult>, ListCell<DisplayResult>>() {
-			@Override
-			public ListCell<DisplayResult> call(ListView<DisplayResult> list) {
-				return new Update();
-			}
-		});
-	}
+		if (obs.getList() != null) {
+			// System.out.println(obs.getList());
+			TableColumn<DisplayResult, String> ip = new TableColumn<>("IP Address");
+			ip.setMinWidth(300);
+			ip.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ipaddr"));
 
-	public void pause(ActionEvent e) {
-		System.out.println("Pause");
+			TableColumn<DisplayResult, String> ping = new TableColumn<>("Ping");
+			ping.setMinWidth(300);
+			ping.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ping"));
+
+			tableViewLeft.setItems(obs.getList());
+			tableViewLeft.getColumns().addAll(ip, ping);
+		}
+
 	}
 
 	public void stop(ActionEvent e) {
+		Play.setDisable(false);
+		Stop.setDisable(true);
 		scanner.stop();
+		System.out.println("Stop");
+	}
 
+	TableView<WellPort> tViewWellPort;
+
+	public static class WellPort {
+		private String port;
+		private String service;
+
+		private WellPort(String sName, String pName) {
+			this.service = sName;
+			this.port = pName;
+		}
+
+		public String getPort() {
+			return port;
+		}
+
+		public String getService() {
+			return service;
+		}
+
+		public void setPort(String pName) {
+			this.port = pName;
+		}
+
+		public void setService(String sName) {
+			this.service = sName;
+		}
+	}
+
+	public ObservableList<WellPort> getWellPort() {
+		ObservableList<WellPort> wPorts = FXCollections.observableArrayList();
+		wPorts.add(new WellPort("HTTP", "80"));
+		wPorts.add(new WellPort("HTTPS", "443"));
+		wPorts.add(new WellPort("FTP", "20,21"));
+		wPorts.add(new WellPort("DNS", "53"));
+		wPorts.add(new WellPort("SMTP", "25"));
+		wPorts.add(new WellPort("POP3", "110"));
+		wPorts.add(new WellPort("IMAP", "143"));
+		wPorts.add(new WellPort("Telnet", "23"));
+		wPorts.add(new WellPort("SSH", "22"));
+		return wPorts;
+	}
+
+	private Stage priStage = new Stage();
+
+	public void help(ActionEvent e) {
+		priStage.setTitle("Help Information");
+
+		TableColumn<WellPort, String> portName = new TableColumn<>("Port");
+		portName.setMinWidth(200);
+		portName.setCellValueFactory(new PropertyValueFactory<>("port"));
+
+		TableColumn<WellPort, String> serviceName = new TableColumn<>("Service");
+		serviceName.setMinWidth(200);
+		serviceName.setCellValueFactory(new PropertyValueFactory<>("service"));
+		tViewWellPort = new TableView<>();
+		tViewWellPort.setItems(getWellPort());
+		tViewWellPort.getColumns().addAll(serviceName, portName);
+
+		VBox vBox = new VBox();
+		vBox.getChildren().addAll(tViewWellPort);
+		Scene scene = new Scene(vBox, 400, 270);
+		priStage.setScene(scene);
+		priStage.show();
+	}
+
+	Button convertBt = new Button();
+
+	Stage stageConverter;
+
+	public void dns(ActionEvent e) {
+		try {
+			stageConverter = new Stage();
+			URL url = getClass().getResource("Converter.fxml");
+			if (url == null) {
+				System.out.println("Couldn't find file: Converter.fxml");
+				Platform.exit();
+			}
+			FXMLLoader loader = new FXMLLoader(url);
+			Parent root = loader.load();
+
+			Scene scene = new Scene(root);
+			stageConverter.setScene(scene);
+			stageConverter.sizeToScene();
+			stageConverter.setTitle("Convert DNS");
+			stageConverter.show();
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			return;
+		}
 	}
 
 	private static class Update extends ListCell<DisplayResult> {
@@ -224,7 +348,7 @@ public class SampleController {
 		public void updateItem(DisplayResult item, boolean empty) {
 			super.updateItem(item, empty);
 			if (item != null) {
-				setText(item.getIp());
+				setText(item.getIpaddr());
 			}
 		}
 	}
