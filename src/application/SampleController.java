@@ -1,13 +1,19 @@
 package application;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -36,9 +42,15 @@ public class SampleController {
 	@FXML
 	private Button Help;
 	@FXML
+	private Button dnsBt;
+
+	@FXML
 	private ProgressBar bar;
 	@FXML
 	private TableView<DisplayResult> tableViewLeft;
+
+	@FXML
+	private TableView<DisplayResult> tableViewRight;
 
 	@FXML
 	public void initialize() {
@@ -95,8 +107,13 @@ public class SampleController {
 			TableColumn<DisplayResult, String> ip = new TableColumn<>("IP Address");
 			ip.setMinWidth(300);
 			ip.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ipaddr"));
+
+			TableColumn<DisplayResult, String> ping = new TableColumn<>("Ping");
+			ping.setMinWidth(300);
+			ping.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ping"));
+
 			tableViewLeft.setItems(obs.getList());
-			tableViewLeft.getColumns().addAll(ip);
+			tableViewLeft.getColumns().addAll(ip, ping);
 		}
 
 	}
@@ -108,7 +125,7 @@ public class SampleController {
 		System.out.println("Stop");
 	}
 
-	TableView<WellPort> tableView;
+	TableView<WellPort> tViewWellPort;
 
 	public static class WellPort {
 		private String port;
@@ -162,15 +179,41 @@ public class SampleController {
 		TableColumn<WellPort, String> serviceName = new TableColumn<>("Service");
 		serviceName.setMinWidth(200);
 		serviceName.setCellValueFactory(new PropertyValueFactory<>("service"));
-		tableView = new TableView<>();
-		tableView.setItems(getWellPort());
-		tableView.getColumns().addAll(serviceName, portName);
+		tViewWellPort = new TableView<>();
+		tViewWellPort.setItems(getWellPort());
+		tViewWellPort.getColumns().addAll(serviceName, portName);
 
 		VBox vBox = new VBox();
-		vBox.getChildren().addAll(tableView);
+		vBox.getChildren().addAll(tViewWellPort);
 		Scene scene = new Scene(vBox, 400, 270);
 		priStage.setScene(scene);
 		priStage.show();
+	}
+
+	Button convertBt = new Button();
+
+	Stage stageConverter;
+
+	public void dns(ActionEvent e) {
+		try {
+			stageConverter = new Stage();
+			URL url = getClass().getResource("Converter.fxml");
+			if (url == null) {
+				System.out.println("Couldn't find file: Converter.fxml");
+				Platform.exit();
+			}
+			FXMLLoader loader = new FXMLLoader(url);
+			Parent root = loader.load();
+
+			Scene scene = new Scene(root);
+			stageConverter.setScene(scene);
+			stageConverter.sizeToScene();
+			stageConverter.setTitle("Convert DNS");
+			stageConverter.show();
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			return;
+		}
 	}
 
 	private static class Update extends ListCell<DisplayResult> {
