@@ -59,67 +59,51 @@ public class SampleController {
 	}
 
 	public void play(ActionEvent e) {
-//		System.out.println("varit");
-//		String data=text.getText();
-//		scan_thread = new Task<Void>() {
-//			@Override
-//			protected Void call() throws Exception {
-//				scanner.scan(data);
-//				return null;
-//			}
-//		};
-//		bar.progressProperty().bind(scan_thread.progressProperty());
-//		new Thread(scan_thread).start();
-		System.out.println( "Receive input ip => " + text.getText() );
-		  String[] inputIP = text.getText().split("-");
-		  if( inputIP.length == 1 ) {
-		   final String[] tokens = inputIP[0].split("\\.");
-		   if (tokens.length == 4) {
-		    System.out.println( "Input IP has right pattern." );
-		    // Scan only one ip.
-		    scan_thread = new Task<Void>() {
-		     @Override
-		     protected Void call() throws Exception {
-//		      scanner = new NetworkScanner(inputIP[0], inputIP[0], 0, 20000);
-		      scanner.scan(inputIP[0],inputIP[0]);
-		      return null;
-		     }
-		    };
-		    bar.progressProperty().bind(scan_thread.progressProperty());
-		    new Thread(scan_thread).start();
-		   }
-		   else {
-		    System.out.println( "Input IP has wrong pattern, try again." );
-		   }
-		  }
-		  else if( inputIP.length == 2 ) {
-		   boolean shouldDo = true;
-		   for(int i = 0 ; i < inputIP.length ; i++) {
-		    final String[] tokens = inputIP[i].split("\\.");
-		    if (tokens.length != 4) {
-		     shouldDo = false;
-		    }
-		   }
-		   if( shouldDo ) {
-		    // Scan from start ip - end ip
-		    scan_thread = new Task<Void>() {
-		     @Override
-		     protected Void call() throws Exception {
-		      scanner.scan(inputIP[0],inputIP[1]);
-		      return null;
-		     }
-		    };
-		    bar.progressProperty().bind(scan_thread.progressProperty());
-		    new Thread(scan_thread).start();
-		   }
-		   else {
-		    System.out.println( "Some input IP has wrong pattern, try again." );
-		   }
-		  }
-		  else {
-		   System.out.println( "Input IP is error, try again." );
-		   text.setText("");
-		  }
+		System.out.println("Receive input ip => " + text.getText());
+		String[] inputIP = text.getText().split("-");
+		if (inputIP.length == 1) {
+			final String[] tokens = inputIP[0].split("\\.");
+			if (tokens.length == 4) {
+				System.out.println("Input IP has right pattern.");
+				// Scan only one ip.
+				scan_thread = new Task<Void>() {
+					@Override
+					protected Void call() throws Exception {
+						scanner.scan(inputIP[0], inputIP[0], 0, 100);
+						return null;
+					}
+				};
+				bar.progressProperty().bind(scan_thread.progressProperty());
+				new Thread(scan_thread).start();
+			} else {
+				System.out.println("Input IP has wrong pattern, try again.");
+			}
+		} else if (inputIP.length == 2) {
+			boolean shouldDo = true;
+			for (int i = 0; i < inputIP.length; i++) {
+				final String[] tokens = inputIP[i].split("\\.");
+				if (tokens.length != 4) {
+					shouldDo = false;
+				}
+			}
+			if (shouldDo) {
+				// Scan from start ip - end ip
+				scan_thread = new Task<Void>() {
+					@Override
+					protected Void call() throws Exception {
+						scanner.scan(inputIP[0], inputIP[1], 0, 100);
+						return null;
+					}
+				};
+				bar.progressProperty().bind(scan_thread.progressProperty());
+				new Thread(scan_thread).start();
+			} else {
+				System.out.println("Some input IP has wrong pattern, try again.");
+			}
+		} else {
+			System.out.println("Input IP is error, try again.");
+			text.setText("");
+		}
 	}
 
 	public void setNetworkScanner(NetworkScanner scanner) {
@@ -142,7 +126,7 @@ public class SampleController {
 
 	public void stop(ActionEvent e) {
 		scanner.stop();
-		
+
 	}
 
 	private static class Update extends ListCell<DisplayResult> {

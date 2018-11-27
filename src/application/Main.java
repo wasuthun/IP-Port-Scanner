@@ -23,7 +23,7 @@ public class Main extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) {
-		NetworkScanner network = new NetworkScanner(0, 60000);
+		NetworkScanner network = new NetworkScanner();
 		try {
 			URL url = getClass().getResource("Sample.fxml");
 			if (url == null) {
