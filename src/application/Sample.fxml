@@ -4,12 +4,21 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.GaussianBlur?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
+      <ImageView fitHeight="569.0" fitWidth="716.0" layoutX="-8.0" layoutY="-10.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../images/Red.png" />
+         </image>
+         <effect>
+            <GaussianBlur />
+         </effect>
+      </ImageView>
       <Button fx:id="Play" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#play" prefHeight="32.0" prefWidth="84.0" text="Play">
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">

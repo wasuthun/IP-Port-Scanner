@@ -3,11 +3,23 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.MotionBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="192.0" prefWidth="483.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ConverterController">
 	<children>
+      <ImageView fitHeight="192.0" fitWidth="495.0" layoutX="-5.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../images/Grey.jpg" />
+         </image>
+         <effect>
+            <MotionBlur angle="360.0" radius="0.0" />
+         </effect>
+      </ImageView>
 		<TextField fx:id="inputField" layoutX="91.0" layoutY="24.0" prefHeight="27.0" prefWidth="365.0" />
+      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
 		<Button fx:id="convertBt" layoutX="91.0" layoutY="134.0" mnemonicParsing="false" onAction="#convert" text="Convert" />
 		<Button fx:id="clearBt" layoutX="405.0" layoutY="134.0" mnemonicParsing="false" onAction="#clear" text="Clear" />
 		<Label layoutX="28.0" layoutY="33.0" text="Input :" />
