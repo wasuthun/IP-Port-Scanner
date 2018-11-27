@@ -105,11 +105,11 @@ public class SampleController {
 		if (obs.getList() != null) {
 			// System.out.println(obs.getList());
 			TableColumn<DisplayResult, String> ip = new TableColumn<>("IP Address");
-			ip.setMinWidth(300);
+			ip.setMinWidth(200);
 			ip.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ipaddr"));
 
 			TableColumn<DisplayResult, String> ping = new TableColumn<>("Ping");
-			ping.setMinWidth(300);
+			ping.setMinWidth(200);
 			ping.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ping"));
 
 			tableViewLeft.setItems(obs.getList());
@@ -125,45 +125,19 @@ public class SampleController {
 		System.out.println("Stop");
 	}
 
-	TableView<WellPort> tViewWellPort;
+	TableView<WellKnownPorts> tViewWellKnownPorts;
 
-	public static class WellPort {
-		private String port;
-		private String service;
-
-		private WellPort(String sName, String pName) {
-			this.service = sName;
-			this.port = pName;
-		}
-
-		public String getPort() {
-			return port;
-		}
-
-		public String getService() {
-			return service;
-		}
-
-		public void setPort(String pName) {
-			this.port = pName;
-		}
-
-		public void setService(String sName) {
-			this.service = sName;
-		}
-	}
-
-	public ObservableList<WellPort> getWellPort() {
-		ObservableList<WellPort> wPorts = FXCollections.observableArrayList();
-		wPorts.add(new WellPort("HTTP", "80"));
-		wPorts.add(new WellPort("HTTPS", "443"));
-		wPorts.add(new WellPort("FTP", "20,21"));
-		wPorts.add(new WellPort("DNS", "53"));
-		wPorts.add(new WellPort("SMTP", "25"));
-		wPorts.add(new WellPort("POP3", "110"));
-		wPorts.add(new WellPort("IMAP", "143"));
-		wPorts.add(new WellPort("Telnet", "23"));
-		wPorts.add(new WellPort("SSH", "22"));
+	public ObservableList<WellKnownPorts> getWellPort() {
+		ObservableList<WellKnownPorts> wPorts = FXCollections.observableArrayList();
+		wPorts.add(new WellKnownPorts("HTTP", "80"));
+		wPorts.add(new WellKnownPorts("HTTPS", "443"));
+		wPorts.add(new WellKnownPorts("FTP", "20,21"));
+		wPorts.add(new WellKnownPorts("DNS", "53"));
+		wPorts.add(new WellKnownPorts("SMTP", "25"));
+		wPorts.add(new WellKnownPorts("POP3", "110"));
+		wPorts.add(new WellKnownPorts("IMAP", "143"));
+		wPorts.add(new WellKnownPorts("Telnet", "23"));
+		wPorts.add(new WellKnownPorts("SSH", "22"));
 		return wPorts;
 	}
 
@@ -172,19 +146,19 @@ public class SampleController {
 	public void help(ActionEvent e) {
 		priStage.setTitle("Help Information");
 
-		TableColumn<WellPort, String> portName = new TableColumn<>("Port");
+		TableColumn<WellKnownPorts, String> portName = new TableColumn<>("Port");
 		portName.setMinWidth(200);
 		portName.setCellValueFactory(new PropertyValueFactory<>("port"));
 
-		TableColumn<WellPort, String> serviceName = new TableColumn<>("Service");
+		TableColumn<WellKnownPorts, String> serviceName = new TableColumn<>("Service");
 		serviceName.setMinWidth(200);
 		serviceName.setCellValueFactory(new PropertyValueFactory<>("service"));
-		tViewWellPort = new TableView<>();
-		tViewWellPort.setItems(getWellPort());
-		tViewWellPort.getColumns().addAll(serviceName, portName);
+		tViewWellKnownPorts = new TableView<>();
+		tViewWellKnownPorts.setItems(getWellPort());
+		tViewWellKnownPorts.getColumns().addAll(serviceName, portName);
 
 		VBox vBox = new VBox();
-		vBox.getChildren().addAll(tViewWellPort);
+		vBox.getChildren().addAll(tViewWellKnownPorts);
 		Scene scene = new Scene(vBox, 400, 270);
 		priStage.setScene(scene);
 		priStage.show();

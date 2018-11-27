@@ -18,7 +18,7 @@
             <MotionBlur angle="360.0" radius="0.0" />
          </effect>
       </ImageView>
-		<TextField fx:id="inputField" layoutX="91.0" layoutY="24.0" prefHeight="27.0" prefWidth="365.0" />
+		<TextField fx:id="inputField" layoutX="91.0" layoutY="24.0" prefHeight="27.0" prefWidth="365.0" promptText="Ex :  209.244.0.4     or    www.facebook.com" />
       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
 		<Button fx:id="convertBt" layoutX="91.0" layoutY="134.0" mnemonicParsing="false" onAction="#convert" text="Convert" />
 		<Button fx:id="clearBt" layoutX="405.0" layoutY="134.0" mnemonicParsing="false" onAction="#clear" text="Clear" />
