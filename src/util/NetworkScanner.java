@@ -16,18 +16,14 @@ import com.sun.javafx.PlatformUtil;
 
 public class NetworkScanner extends Observable {
 
-	private int fromPort;
-	private int toPort;
 	private boolean isRunning;
 	List<Future<ScanResult>> futures;
 
-	public NetworkScanner(int fromPort, int toPort) {
+	public NetworkScanner() {
 		this.isRunning = false;
-		this.fromPort = fromPort;
-		this.toPort = toPort;
 	}
 
-	public void scan(String fromIP,String toIP) {
+	public void scan(String fromIP, String toIP, int fromPort, int toPort) {
 		try {
 			this.isRunning = true;
 			final ExecutorService es = Executors.newFixedThreadPool(500);
@@ -49,22 +45,6 @@ public class NetworkScanner extends Observable {
 				}
 			}
 			es.awaitTermination(200L, TimeUnit.MILLISECONDS);
-
-			// int openPorts = 0;
-			// for (final Future<ScanResult> f : futures) {
-			// try {
-			// if (f.get().isOpen()) {
-			// openPorts++;
-			// System.out.println(f.get().getIp() + " with " + f.get().getPort()
-			// + " Port555.");
-			//
-			// }
-			// } catch (InterruptedException e) {
-			//
-			// } catch (ExecutionException e) {
-			//
-			// }
-			// }
 		} catch (InterruptedException e) {
 
 		}
