@@ -129,7 +129,7 @@ public class SampleController {
 		if (inputIP.length == 1) {
 			String focusIP = inputIP[0];
 			if (isIPv4(focusIP)) {
-				System.out.println("Input IP has right pattern.");
+				System.out.println("Input IP has right pattern 1.");
 				// 1 Port
 				if (inputPorts.length == 1) {
 					int focusPort = Integer.parseInt(inputPorts[0]);

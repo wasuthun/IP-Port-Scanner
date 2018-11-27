@@ -99,13 +99,12 @@ public class NetworkScanner extends Observable {
 			if (address.isReachable(2000)) {
 				if (isIPv4(domain))
 					return address.getHostName();
-				return address.getHostName();
+				return address.getHostAddress();
 			}
 		} catch (Exception e) {
 			System.out.println("EXCEPTION");
 			return "Can't resolve hostname";
 		}
-		System.out.println("TOO SLOW");
 		return "Can't resolve hostname";
 	}
 
