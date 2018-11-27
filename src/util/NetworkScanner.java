@@ -65,6 +65,48 @@ public class NetworkScanner extends Observable {
 		}
 	}
 
+	public String dnsLookup(String domain) {
+		try {
+			InetAddress address = InetAddress.getByName(getUrlDomainName(domain));
+			if (address.isReachable(2000)) {
+				if (isIPv4(domain))
+					return address.getHostName();
+				return address.getHostName();
+			}
+		} catch (Exception e) {
+			System.out.println("EXCEPTION");
+			return "Can't resolve hostname";
+		}
+		System.out.println("TOO SLOW");
+		return "Can't resolve hostname";
+	}
+
+	private String getUrlDomainName(String url) {
+		String domainName = new String(url);
+
+		int index = domainName.indexOf("://");
+
+		if (index != -1) {
+			// keep everything after the "://"
+			domainName = domainName.substring(index + 3);
+		}
+
+		index = domainName.indexOf('/');
+
+		if (index != -1) {
+			// keep everything before the '/'
+			domainName = domainName.substring(0, index);
+		}
+
+		// check for and remove a preceding 'www'
+		// followed by any sequence of characters (non-greedy)
+		// followed by a '.'
+		// from the beginning of the string
+		domainName = domainName.replaceFirst("^www.*?\\.", "");
+		System.out.println(domainName);
+		return domainName;
+	}
+
 	private String ping(String host) {
 		PingStrategy pingStategy;
 		if (PlatformUtil.isWindows()) {
@@ -95,6 +137,11 @@ public class NetworkScanner extends Observable {
 				}
 			}
 		});
+	}
+
+	private static boolean isIPv4(final String ip) {
+		String PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
+		return ip.matches(PATTERN);
 	}
 
 	private final String nextIpAddress(final String input) {
