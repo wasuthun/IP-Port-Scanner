@@ -1,19 +1,25 @@
 package application;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import util.NetworkScanner;
 
@@ -36,6 +42,29 @@ public class SampleController {
 	private TextField text;
 	@FXML
 	private TextField inputPort;
+	@FXML
+	private Button credit;
+	private Stage creditStage =new Stage();
+	
+	public void showCredit(ActionEvent e) {
+		try {
+			URL url = getClass().getResource("Credit.fxml");
+			if (url == null) {
+				System.out.println("Couldn't find file: Credit.fxml");
+				Platform.exit();
+			}
+			FXMLLoader loader = new FXMLLoader(url);
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+			creditStage.setScene(scene);
+			creditStage.sizeToScene();
+			creditStage.setTitle("Credit");
+			creditStage.show();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return;
+		}
+	}
 
 	@FXML
 	public void handleMouseClick(MouseEvent arg0) {

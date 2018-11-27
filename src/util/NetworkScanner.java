@@ -55,7 +55,7 @@ public class NetworkScanner extends Observable {
 		for (final Future<ScanResult> f : futures) {
 			f.cancel(true);
 		}
-	}
+	} 
 
 	private boolean isReachable(String host) {
 		try {
