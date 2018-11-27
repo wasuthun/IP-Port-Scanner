@@ -95,6 +95,7 @@ public class SampleController {
 		ObservableList<String> list = FXCollections.observableArrayList();
 		DisplayResult displayPort = tableViewLeft.getSelectionModel().getSelectedItem();
 		if (displayPort != null) {
+			System.out.println(tableViewLeft.getSelectionModel().getSelectedItem().getPing());
 			TableColumn<String, String> port = new TableColumn<>("Port");
 			List<String> ports = new ArrayList<>();
 			for (Integer s : tableViewLeft.getSelectionModel().getSelectedItem().getPort()) {
@@ -102,6 +103,7 @@ public class SampleController {
 
 			}
 			System.out.println(list.toString());
+			port.setMinWidth(400);
 			port.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
 			tableViewRight.getColumns().clear();
 
@@ -125,8 +127,7 @@ public class SampleController {
 		// 1 IP.
 		if (inputIP.length == 1) {
 			String focusIP = inputIP[0];
-			final String[] tokens = focusIP.split("\\.");
-			if (tokens.length == 4) {
+			if (isIPv4(focusIP)) {
 				System.out.println("Input IP has right pattern.");
 				// 1 Port
 				if (inputPorts.length == 1) {
@@ -135,7 +136,6 @@ public class SampleController {
 					scan_thread = new Task<Void>() {
 						@Override
 						protected Void call() throws Exception {
-							// scanner.scan(inputIP[0], inputIP[0], 0, 100);
 							scanner.scan(focusIP, focusIP, focusPort, focusPort);
 							return null;
 						}
@@ -163,7 +163,40 @@ public class SampleController {
 					System.out.println("Input Port has wrong pattern, try again.");
 				}
 			} else {
-				System.out.println("Input IP has wrong pattern, try again.");
+				System.out.println("Input DomainName has right pattern.");
+				// 1 Port
+				if (inputPorts.length == 1) {
+					int focusPort = Integer.parseInt(inputPorts[0]);
+					// Scan only 1 IP with 1 Port
+					scan_thread = new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							scanner.scanByDomainName(focusIP, focusPort, focusPort);
+							return null;
+						}
+					};
+					bar.progressProperty().bind(scan_thread.progressProperty());
+					new Thread(scan_thread).start();
+				}
+				// 2 Ports
+				else if (inputPorts.length == 2) {
+					int startPort = Integer.parseInt(inputPorts[0]);
+					int endPort = Integer.parseInt(inputPorts[1]);
+					// Scan only 1 IP between 2 Ports
+					scan_thread = new Task<Void>() {
+
+						@Override
+						protected Void call() throws Exception {
+							// scanner.scan(inputIP[0], inputIP[0], 0, 100);
+							scanner.scanByDomainName(focusIP, startPort, endPort);
+							return null;
+						}
+					};
+					bar.progressProperty().bind(scan_thread.progressProperty());
+					new Thread(scan_thread).start();
+				} else {
+					System.out.println("Input Port has wrong pattern, try again.");
+				}
 			}
 		}
 		// 2 IP.
@@ -172,8 +205,7 @@ public class SampleController {
 			String startIP = inputIP[0];
 			String endIP = inputIP[1];
 			for (int i = 0; i < inputIP.length; i++) {
-				final String[] tokens = inputIP[i].split("\\.");
-				if (tokens.length != 4) {
+				if (!isIPv4(inputIP[i])) {
 					shouldDo = false;
 				}
 			}
@@ -231,16 +263,16 @@ public class SampleController {
 	public void show(NetworkObserver obs) {
 		if (obs.getList() != null) {
 			// System.out.println(obs.getList());
-			TableColumn<DisplayResult, String> ip = new TableColumn<>("IP Address");
-			ip.setMinWidth(200);
-			ip.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ipaddr"));
-
 			TableColumn<DisplayResult, String> ping = new TableColumn<>("Ping");
 			ping.setMinWidth(200);
 			ping.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ping"));
 
+			TableColumn<DisplayResult, String> ip = new TableColumn<>("IP Address");
+			ip.setMinWidth(200);
+			ip.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ipaddr"));
+
 			tableViewLeft.setItems(obs.getList());
-			tableViewLeft.getColumns().addAll(ip, ping);
+			tableViewLeft.getColumns().addAll(ping, ip);
 		}
 
 	}
@@ -369,5 +401,36 @@ public class SampleController {
 			return m1.compareTo(m2);
 		}
 	};
+
+	private static boolean isIPv4(final String ip) {
+		String PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
+		return ip.matches(PATTERN);
+	}
+
+	private String getUrlDomainName(String url) {
+		String domainName = new String(url);
+
+		int index = domainName.indexOf("://");
+
+		if (index != -1) {
+			// keep everything after the "://"
+			domainName = domainName.substring(index + 3);
+		}
+
+		index = domainName.indexOf('/');
+
+		if (index != -1) {
+			// keep everything before the '/'
+			domainName = domainName.substring(0, index);
+		}
+
+		// check for and remove a preceding 'www'
+		// followed by any sequence of characters (non-greedy)
+		// followed by a '.'
+		// from the beginning of the string
+		domainName = domainName.replaceFirst("^www.*?\\.", "");
+		System.out.println(domainName);
+		return domainName;
+	}
 
 }

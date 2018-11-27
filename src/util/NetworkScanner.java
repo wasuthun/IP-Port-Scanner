@@ -4,7 +4,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -17,7 +19,7 @@ import com.sun.javafx.PlatformUtil;
 public class NetworkScanner extends Observable {
 
 	private boolean isRunning;
-	List<Future<ScanResult>> futures;
+	private List<Future<ScanResult>> futures;
 
 	public NetworkScanner() {
 		this.isRunning = false;
@@ -33,12 +35,13 @@ public class NetworkScanner extends Observable {
 			for (String ipaddr : ipRange) {
 				if (!isRunning)
 					break;
+				String ping = ping(ipaddr);
+				System.out.println("PING IS " + ping);
 				if (isReachable(ipaddr)) {
-					System.out.println("ping: " + ping(ipaddr));
 					for (int port = fromPort; port <= toPort; port++) {
 						if (!isRunning)
 							break;
-						futures.add(portIsOpen(es, ipaddr, port, timeout));
+						futures.add(portIsOpen(es, ipaddr, port, timeout, ping));
 					}
 				} else {
 					System.out.println(ipaddr + " is not reachable");
@@ -50,12 +53,37 @@ public class NetworkScanner extends Observable {
 		}
 	}
 
+	public void scanByDomainName(String domainName, int fromPort, int toPort) {
+		try {
+			this.isRunning = true;
+			final ExecutorService es = Executors.newFixedThreadPool(500);
+			int timeout = 100;
+			futures = new ArrayList<>();
+			String ping = ping(domainName);
+			if (isReachable(domainName)) {
+				for (int port = fromPort; port <= toPort; port++) {
+					if (!isRunning)
+						break;
+					futures.add(portIsOpen(es, domainName, port, timeout, ping));
+				}
+			} else {
+				System.out.println(domainName + " is not reachable");
+			}
+
+			es.awaitTermination(200L, TimeUnit.MILLISECONDS);
+		} catch (
+
+		InterruptedException e) {
+
+		}
+	}
+
 	public void stop() {
 		this.isRunning = false;
 		for (final Future<ScanResult> f : futures) {
 			f.cancel(true);
 		}
-	} 
+	}
 
 	private boolean isReachable(String host) {
 		try {
@@ -117,8 +145,8 @@ public class NetworkScanner extends Observable {
 		return pingStategy.ping();
 	}
 
-	private Future<ScanResult> portIsOpen(final ExecutorService es, final String ip, final int port,
-			final int timeout) {
+	private Future<ScanResult> portIsOpen(final ExecutorService es, final String ip, final int port, final int timeout,
+			String ping) {
 		return es.submit(new Callable<ScanResult>() {
 			@Override
 			public ScanResult call() {
@@ -128,12 +156,12 @@ public class NetworkScanner extends Observable {
 					socket.close();
 					/* send Scan Result to UI */
 					setChanged();
-					notifyObservers(new ScanResult(ip, port, true));
-					return new ScanResult(ip, port, true);
+					notifyObservers(new ScanResult(ip, port, true, ping));
+					return new ScanResult(ip, port, true, ping);
 				} catch (Exception ex) {/* send Scan Result to UI */
 					setChanged();
-					notifyObservers(new ScanResult(ip, port, false));
-					return new ScanResult(ip, port, false);
+					notifyObservers(new ScanResult(ip, port, false, ping));
+					return new ScanResult(ip, port, false, ping);
 				}
 			}
 		});

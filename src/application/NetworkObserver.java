@@ -37,7 +37,7 @@ public class NetworkObserver implements Observer {
 						result.addPort(s.getPort());
 						list.remove(result);
 					} else {
-						result = new DisplayResult(s.getIp(), new Integer(s.getPort()));
+						result = new DisplayResult(s.getIp(), new Integer(s.getPort()), s.getPing());
 					}
 					map.put(s.getIp(), result);
 					list.add(result);
