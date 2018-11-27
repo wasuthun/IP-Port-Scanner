@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.MotionBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="161.0" prefWidth="442.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="161.0" prefWidth="436.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text layoutX="43.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wasuthun       Wanaphongthipakorn   5910545841" />
-      <Text layoutX="43.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pittayut           Sothanakul                    5910546678" wrappingWidth="316.90039682388306" />
-      <Text layoutX="172.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create by" />
-      <Text layoutX="43.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wongsathorn  Panichkurkul                 5910545817" wrappingWidth="316.90039682388306" />
-      <Text layoutX="43.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sathira             Kittisukmongkol           5910545868" wrappingWidth="316.90039682388306" />
+      <ImageView fitHeight="196.0" fitWidth="446.0" layoutX="-5.0" layoutY="-35.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../images/Grey.jpg" />
+         </image>
+         <effect>
+            <MotionBlur angle="360.0" radius="3.07" />
+         </effect>
+      </ImageView>
+      <Text fill="WHITE" layoutX="52.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wasuthun         Wanaphongthipakorn   5910545841" />
+      <Text fill="WHITE" layoutX="52.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pittayut             Sothanakul                    5910546678" wrappingWidth="316.90039682388306" />
+      <Text fill="WHITE" layoutX="52.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wongsathorn    Panichkurkul                 5910545817" wrappingWidth="316.90039682388306" />
+      <Text fill="WHITE" layoutX="52.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sathira               Kittisukmongkol           5910545868" wrappingWidth="337.9003950357437" />
    </children>
 </Pane>

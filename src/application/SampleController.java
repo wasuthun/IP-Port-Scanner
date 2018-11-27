@@ -75,7 +75,7 @@ public class SampleController {
 			Scene scene = new Scene(root);
 			creditStage.setScene(scene);
 			creditStage.sizeToScene();
-			creditStage.setTitle("Credit");
+			creditStage.setTitle("Credit By");
 			creditStage.show();
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -232,11 +232,11 @@ public class SampleController {
 		if (obs.getList() != null) {
 			// System.out.println(obs.getList());
 			TableColumn<DisplayResult, String> ip = new TableColumn<>("IP Address");
-			ip.setMinWidth(300);
+			ip.setMinWidth(200);
 			ip.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ipaddr"));
 
 			TableColumn<DisplayResult, String> ping = new TableColumn<>("Ping");
-			ping.setMinWidth(300);
+			ping.setMinWidth(200);
 			ping.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ping"));
 
 			tableViewLeft.setItems(obs.getList());

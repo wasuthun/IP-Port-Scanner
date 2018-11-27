@@ -8,8 +8,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
+      <ImageView fitHeight="564.0" fitWidth="701.0" layoutY="-4.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../images/Red.png" />
+         </image>
+      </ImageView>
       <Button fx:id="Play" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#play" prefHeight="32.0" prefWidth="84.0" text="Play">
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
