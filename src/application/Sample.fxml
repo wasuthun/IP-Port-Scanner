@@ -9,7 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
       <ListView fx:id="view2" layoutX="441.0" layoutY="109.0" prefHeight="385.0" prefWidth="240.0" />
       <Button fx:id="Play" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" onAction="#play" prefHeight="32.0" prefWidth="84.0" text="Play">
@@ -22,7 +22,7 @@
          </graphic></Button>
       <ListView fx:id="view" layoutX="24.0" layoutY="109.0" onMouseClicked="#handleMouseClick" prefHeight="385.0" prefWidth="391.0" />
       <TextField fx:id="text" layoutX="24.0" layoutY="67.0" prefHeight="27.0" prefWidth="391.0" />
-      <TextField layoutX="441.0" layoutY="67.0" prefHeight="27.0" prefWidth="240.0" />
+      <TextField fx:id="inputPort" layoutX="441.0" layoutY="67.0" prefHeight="27.0" prefWidth="240.0" />
       <ProgressBar fx:id="bar" layoutX="21.0" layoutY="510.0" prefHeight="20.0" prefWidth="660.0" progress="0.0" />
       <ScrollBar layoutX="24.0" layoutY="477.0" prefHeight="17.0" prefWidth="391.0" />
       <ScrollBar layoutX="398.0" layoutY="109.0" orientation="VERTICAL" prefHeight="369.0" prefWidth="17.0" />

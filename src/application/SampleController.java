@@ -34,6 +34,8 @@ public class SampleController {
 	private ProgressBar bar;
 	@FXML
 	private TextField text;
+	@FXML
+	private TextField inputPort;
 
 	@FXML
 	public void handleMouseClick(MouseEvent arg0) {
@@ -59,27 +61,64 @@ public class SampleController {
 	}
 
 	public void play(ActionEvent e) {
+		// Scan IP from input
 		System.out.println("Receive input ip => " + text.getText());
 		String[] inputIP = text.getText().split("-");
+		
+		//Scan Port from input
+		System.out.println("Receive input port => " + inputPort.getText());
+		String[] inputPorts = inputPort.getText().split("-");
+		
+		// Implementation.
+		// 1 IP.
 		if (inputIP.length == 1) {
-			final String[] tokens = inputIP[0].split("\\.");
+			String focusIP = inputIP[0];
+			final String[] tokens = focusIP.split("\\.");
 			if (tokens.length == 4) {
 				System.out.println("Input IP has right pattern.");
-				// Scan only one ip.
-				scan_thread = new Task<Void>() {
-					@Override
-					protected Void call() throws Exception {
-						scanner.scan(inputIP[0], inputIP[0], 0, 100);
-						return null;
-					}
-				};
-				bar.progressProperty().bind(scan_thread.progressProperty());
-				new Thread(scan_thread).start();
+				// 1 Port
+				if(inputPorts.length == 1) {
+					int focusPort = Integer.parseInt(inputPorts[0]);
+					// Scan only 1 IP with 1 Port
+					scan_thread = new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							// scanner.scan(inputIP[0], inputIP[0], 0, 100);
+							scanner.scan(focusIP, focusIP, focusPort, focusPort);
+							return null;
+						}
+					};
+					bar.progressProperty().bind(scan_thread.progressProperty());
+					new Thread(scan_thread).start();
+				}
+				// 2 Ports
+				else if(inputPorts.length == 2) {
+					int startPort = Integer.parseInt(inputPorts[0]);
+					int endPort = Integer.parseInt(inputPorts[1]);
+					// Scan only 1 IP between 2 Ports
+					scan_thread = new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							// scanner.scan(inputIP[0], inputIP[0], 0, 100);
+							scanner.scan(focusIP, focusIP, startPort, endPort);
+							return null;
+						}
+					};
+					bar.progressProperty().bind(scan_thread.progressProperty());
+					new Thread(scan_thread).start();
+				}
+				else {
+					System.out.println("Input Port has wrong pattern, try again.");
+				}
 			} else {
 				System.out.println("Input IP has wrong pattern, try again.");
 			}
-		} else if (inputIP.length == 2) {
+		} 
+		// 2 IP.
+		else if (inputIP.length == 2) {
 			boolean shouldDo = true;
+			String startIP = inputIP[0];
+			String endIP = inputIP[1];
 			for (int i = 0; i < inputIP.length; i++) {
 				final String[] tokens = inputIP[i].split("\\.");
 				if (tokens.length != 4) {
@@ -87,20 +126,45 @@ public class SampleController {
 				}
 			}
 			if (shouldDo) {
-				// Scan from start ip - end ip
-				scan_thread = new Task<Void>() {
-					@Override
-					protected Void call() throws Exception {
-						scanner.scan(inputIP[0], inputIP[1], 0, 100);
-						return null;
-					}
-				};
-				bar.progressProperty().bind(scan_thread.progressProperty());
-				new Thread(scan_thread).start();
+				// 1 Port
+				if(inputPorts.length == 1) {
+					int focusPort = Integer.parseInt(inputPorts[0]);
+					// Scan 2 IP in 1 Port
+					scan_thread = new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							// scanner.scan(inputIP[0], inputIP[1], 0, 100);
+							scanner.scan(startIP, endIP, focusPort, focusPort);
+							return null;
+						}
+					};
+					bar.progressProperty().bind(scan_thread.progressProperty());
+					new Thread(scan_thread).start();
+				}
+				// 2 Port
+				else if(inputPorts.length == 2) {
+					int startPort = Integer.parseInt(inputPorts[0]);
+					int endPort = Integer.parseInt(inputPorts[0]);
+					// Scan 2 IP between 2 Ports
+					scan_thread = new Task<Void>() {
+						@Override
+						protected Void call() throws Exception {
+							// scanner.scan(inputIP[0], inputIP[1], 0, 100);
+							scanner.scan(startIP, endIP, startPort, endPort);
+							return null;
+						}
+					};
+					bar.progressProperty().bind(scan_thread.progressProperty());
+					new Thread(scan_thread).start();
+				}
+				else {
+					System.out.println("Input Port has wrong pattern, try again.");
+				}
 			} else {
 				System.out.println("Some input IP has wrong pattern, try again.");
 			}
-		} else {
+		} 
+		else {
 			System.out.println("Input IP is error, try again.");
 			text.setText("");
 		}
