@@ -2,6 +2,7 @@ package application;
 
 import java.util.Collections;
 import java.util.Comparator;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -36,6 +37,8 @@ public class SampleController {
 	private Button Help;
 	@FXML
 	private ProgressBar bar;
+	@FXML
+	private TableView<DisplayResult> tableViewLeft;
 
 	@FXML
 	public void initialize() {
@@ -85,14 +88,17 @@ public class SampleController {
 		this.scanner = scanner;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void show(NetworkObserver obs) {
-		view.setItems(obs.getList());
-		view.setCellFactory(new Callback<ListView<DisplayResult>, ListCell<DisplayResult>>() {
-			@Override
-			public ListCell<DisplayResult> call(ListView<DisplayResult> list) {
-				return new Update();
-			}
-		});
+		if (obs.getList() != null) {
+			// System.out.println(obs.getList());
+			TableColumn<DisplayResult, String> ip = new TableColumn<>("IP Address");
+			ip.setMinWidth(300);
+			ip.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ipaddr"));
+			tableViewLeft.setItems(obs.getList());
+			tableViewLeft.getColumns().addAll(ip);
+		}
+
 	}
 
 	public void stop(ActionEvent e) {
@@ -172,7 +178,7 @@ public class SampleController {
 		public void updateItem(DisplayResult item, boolean empty) {
 			super.updateItem(item, empty);
 			if (item != null) {
-				setText(item.getIp());
+				setText(item.getIpaddr());
 			}
 		}
 	}
