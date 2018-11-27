@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Collections;
+import java.util.Comparator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -31,22 +33,27 @@ public class SampleController {
 	private Task<Void> scan_thread;
 	private NetworkScanner scanner;
 	@FXML
-	private Button Pause;
-	@FXML
 	private Button Help;
 	@FXML
 	private ProgressBar bar;
 
 	@FXML
+	public void initialize() {
+		Play.setDisable(false);
+		Stop.setDisable(true);
+	}
+
 	public void handleMouseClick(MouseEvent arg0) {
 		System.out.println("clicked on " + view.getSelectionModel().getSelectedItem());
 		System.out.println(view.getSelectionModel().getSelectedItem().getClass());
 		ObservableList<Integer> list = FXCollections.observableArrayList();
 		DisplayResult displayPort = view.getSelectionModel().getSelectedItem();
 		if (displayPort != null) {
+			view2.getItems().clear();
 			for (Integer port : displayPort.getPort()) {
 				list.add(port);
 			}
+			Collections.sort(list, portOrder);
 			view2.setItems(list);
 			view2.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
 				@Override
@@ -59,6 +66,8 @@ public class SampleController {
 	}
 
 	public void play(ActionEvent e) {
+		Play.setDisable(true);
+		Stop.setDisable(false);
 		System.out.println("varit");
 		scan_thread = new Task<Void>() {
 			@Override
@@ -86,16 +95,15 @@ public class SampleController {
 		});
 	}
 
-	public void pause(ActionEvent e) {
-		System.out.println("Pause");
-	}
-
 	public void stop(ActionEvent e) {
+		Play.setDisable(false);
+		Stop.setDisable(true);
 		scanner.stop();
-
+		System.out.println("Stop");
 	}
 
 	TableView<WellPort> tableView;
+
 	public static class WellPort {
 		private String port;
 		private String service;
@@ -154,7 +162,7 @@ public class SampleController {
 
 		VBox vBox = new VBox();
 		vBox.getChildren().addAll(tableView);
-		Scene scene = new Scene(vBox);
+		Scene scene = new Scene(vBox, 400, 270);
 		priStage.setScene(scene);
 		priStage.show();
 	}
@@ -178,5 +186,12 @@ public class SampleController {
 			}
 		}
 	}
+
+	Comparator<Integer> portOrder = new Comparator<Integer>() {
+		@Override
+		public int compare(Integer m1, Integer m2) {
+			return m1.compareTo(m2);
+		}
+	};
 
 }

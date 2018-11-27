@@ -30,16 +30,18 @@ public class NetworkObserver implements Observer {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				DisplayResult result = null;
-				if (map.containsKey(s.getIp())) {
-					result = map.get(s.getIp());
-					result.addPort(s.getPort());
-					list.remove(result);
-				} else {
-					result = new DisplayResult(s.getIp(), new Integer(s.getPort()));
+				if (s.isOpen()) {
+					DisplayResult result = null;
+					if (map.containsKey(s.getIp())) {
+						result = map.get(s.getIp());
+						result.addPort(s.getPort());
+						list.remove(result);
+					} else {
+						result = new DisplayResult(s.getIp(), new Integer(s.getPort()));
+					}
+					map.put(s.getIp(), result);
+					list.add(result);
 				}
-				map.put(s.getIp(), result);
-				list.add(result);
 			}
 		});
 	}
