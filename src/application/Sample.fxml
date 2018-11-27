@@ -46,9 +46,23 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="credit" layoutX="441.0" layoutY="24.0" mnemonicParsing="false" onAction="#showCredit" prefHeight="32.0" prefWidth="74.0" text="Credit" />
+      <Button fx:id="credit" layoutX="441.0" layoutY="24.0" mnemonicParsing="false" onAction="#showCredit" prefHeight="32.0" prefWidth="84.0" text="Credit">
+         <graphic>
+            <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/Member.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
       <TableView fx:id="tableViewLeft" layoutX="22.0" layoutY="109.0" onMouseClicked="#handleMouseClick" prefHeight="387.0" prefWidth="393.0" />
       <TableView fx:id="tableViewRight" layoutX="441.0" layoutY="109.0" prefHeight="389.0" prefWidth="241.0" />
-      <Button fx:id="dnsBt" layoutX="366.0" layoutY="25.0" mnemonicParsing="false" onAction="#dns" prefHeight="31.0" prefWidth="49.0" text="DNS" />
+      <Button fx:id="dnsBt" layoutX="366.0" layoutY="25.0" mnemonicParsing="false" onAction="#dns" prefHeight="31.0" prefWidth="49.0">
+         <graphic>
+            <ImageView fitHeight="21.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/DNSICON.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
    </children>
 </Pane>
