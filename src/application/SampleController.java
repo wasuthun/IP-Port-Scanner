@@ -1,5 +1,8 @@
 package application;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -36,9 +39,11 @@ public class SampleController {
 		ObservableList<Integer> list = FXCollections.observableArrayList();
 		DisplayResult displayPort = view.getSelectionModel().getSelectedItem();
 		if (displayPort != null) {
+			view2.getItems().clear();
 			for (Integer port : displayPort.getPort()) {
 				list.add(port);
 			}
+			Collections.sort(list, portOrder);
 			view2.setItems(list);
 			view2.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
 				@Override
@@ -61,7 +66,6 @@ public class SampleController {
 		};
 		bar.progressProperty().bind(scan_thread.progressProperty());
 		new Thread(scan_thread).start();
-
 	}
 
 	public void setNetworkScanner(NetworkScanner scanner) {
@@ -106,5 +110,12 @@ public class SampleController {
 			}
 		}
 	}
+
+	Comparator<Integer> portOrder = new Comparator<Integer>() {
+		@Override
+		public int compare(Integer m1, Integer m2) {
+			return m1.compareTo(m2);
+		}
+	};
 
 }
