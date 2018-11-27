@@ -2,9 +2,6 @@ package application;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javafx.application.Platform;
@@ -27,10 +24,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import util.NetworkScanner;
 
 public class SampleController {
@@ -46,7 +42,8 @@ public class SampleController {
 	private Button Help;
 	@FXML
 	private Button dnsBt;
-
+	@FXML
+	private Text status;
 	@FXML
 	private ProgressBar bar;
 	@FXML
@@ -91,20 +88,17 @@ public class SampleController {
 	}
 
 	public void handleMouseClick(MouseEvent arg0) {
-		System.out.println("clicked on " + tableViewLeft.getSelectionModel().getSelectedItem());
-		System.out.println(tableViewLeft.getSelectionModel().getSelectedItem().getClass());
+		tableViewRight.getItems().clear();
 		ObservableList<String> list = FXCollections.observableArrayList();
 		DisplayResult displayPort = tableViewLeft.getSelectionModel().getSelectedItem();
 		if (displayPort != null) {
 			System.out.println(tableViewLeft.getSelectionModel().getSelectedItem().getPing());
 			TableColumn<String, String> port = new TableColumn<>("Port");
-			List<String> ports = new ArrayList<>();
 			for (Integer s : tableViewLeft.getSelectionModel().getSelectedItem().getPort()) {
 				list.add(new String(s + ""));
-
 			}
 			System.out.println(list.toString());
-			port.setMinWidth(400);
+			port.setMinWidth(250);
 			port.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
 			tableViewRight.getColumns().clear();
 
@@ -116,6 +110,8 @@ public class SampleController {
 	}
 
 	public void play(ActionEvent e) {
+		tableViewLeft.getItems().clear();
+		tableViewRight.getItems().clear();
 		// Scan IP from input
 		System.out.println("Receive input ip => " + text.getText());
 		String[] inputIP = text.getText().split("-");
@@ -141,7 +137,7 @@ public class SampleController {
 							return null;
 						}
 					};
-					bar.progressProperty().bind(scan_thread.progressProperty());
+					// bar.progressProperty().bind(scan_thread.progressProperty());
 					new Thread(scan_thread).start();
 				}
 				// 2 Ports
@@ -158,7 +154,7 @@ public class SampleController {
 							return null;
 						}
 					};
-					bar.progressProperty().bind(scan_thread.progressProperty());
+					// bar.progressProperty().bind(scan_thread.progressProperty());
 					new Thread(scan_thread).start();
 				} else {
 					System.out.println("Input Port has wrong pattern, try again.");
@@ -176,8 +172,9 @@ public class SampleController {
 							return null;
 						}
 					};
-					bar.progressProperty().bind(scan_thread.progressProperty());
+					// bar.progressProperty().bind(scan_thread.progressProperty());
 					new Thread(scan_thread).start();
+
 				}
 				// 2 Ports
 				else if (inputPorts.length == 2) {
@@ -193,7 +190,7 @@ public class SampleController {
 							return null;
 						}
 					};
-					bar.progressProperty().bind(scan_thread.progressProperty());
+					// bar.progressProperty().bind(scan_thread.progressProperty());
 					new Thread(scan_thread).start();
 				} else {
 					System.out.println("Input Port has wrong pattern, try again.");
@@ -223,23 +220,24 @@ public class SampleController {
 							return null;
 						}
 					};
-					bar.progressProperty().bind(scan_thread.progressProperty());
+					// bar.progressProperty().bind(scan_thread.progressProperty());
 					new Thread(scan_thread).start();
 				}
 				// 2 Port
 				else if (inputPorts.length == 2) {
 					int startPort = Integer.parseInt(inputPorts[0]);
-					int endPort = Integer.parseInt(inputPorts[0]);
+					int endPort = Integer.parseInt(inputPorts[1]);
 					// Scan 2 IP between 2 Ports
 					scan_thread = new Task<Void>() {
 						@Override
 						protected Void call() throws Exception {
 							// scanner.scan(inputIP[0], inputIP[1], 0, 100);
+							System.out.println("CALL!");
 							scanner.scan(startIP, endIP, startPort, endPort);
 							return null;
 						}
 					};
-					bar.progressProperty().bind(scan_thread.progressProperty());
+					// bar.progressProperty().bind(scan_thread.progressProperty());
 					new Thread(scan_thread).start();
 				} else {
 					System.out.println("Input Port has wrong pattern, try again.");
@@ -263,7 +261,7 @@ public class SampleController {
 	@SuppressWarnings("unchecked")
 	public void show(NetworkObserver obs) {
 		if (obs.getList() != null) {
-			// System.out.println(obs.getList());
+			obs.setController(this);
 			TableColumn<DisplayResult, String> ping = new TableColumn<>("Ping");
 			ping.setMinWidth(200);
 			ping.setCellValueFactory(new PropertyValueFactory<DisplayResult, String>("ping"));
@@ -330,7 +328,7 @@ public class SampleController {
 	private Stage priStage = new Stage();
 
 	public void help(ActionEvent e) {
-		priStage.setTitle("Help Information");
+		priStage.setTitle("Port Information");
 
 		TableColumn<WellPort, String> portName = new TableColumn<>("Port");
 		portName.setMinWidth(200);
@@ -370,7 +368,7 @@ public class SampleController {
 			stageConverter.setScene(scene);
 			stageConverter.sizeToScene();
 			stageConverter.setResizable(false);
-			stageConverter.setTitle("Convert DNS");
+			stageConverter.setTitle("DNS lookup");
 			stageConverter.show();
 		} catch (Exception exception) {
 			exception.printStackTrace();
@@ -378,62 +376,19 @@ public class SampleController {
 		}
 	}
 
-	private static class Update extends ListCell<DisplayResult> {
-		@Override
-		public void updateItem(DisplayResult item, boolean empty) {
-			super.updateItem(item, empty);
-			if (item != null) {
-				setText(item.getIpaddr());
-			}
-		}
+	public void setStatus(String txt) {
+		status.setText(txt);
 	}
 
-	private static class UpdatePort extends ListCell<Integer> {
-		@Override
-		public void updateItem(Integer item, boolean empty) {
-			super.updateItem(item, empty);
-			if (item != null) {
-				setText(item + "");
-			}
-		}
+	public void finished() {
+		Play.setDisable(false);
+		Stop.setDisable(true);
+		text.setEditable(true);
+		inputPort.setEditable(true);
 	}
-
-	Comparator<Integer> portOrder = new Comparator<Integer>() {
-		@Override
-		public int compare(Integer m1, Integer m2) {
-			return m1.compareTo(m2);
-		}
-	};
 
 	private static boolean isIPv4(final String ip) {
 		String PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
 		return ip.matches(PATTERN);
 	}
-
-	private String getUrlDomainName(String url) {
-		String domainName = new String(url);
-
-		int index = domainName.indexOf("://");
-
-		if (index != -1) {
-			// keep everything after the "://"
-			domainName = domainName.substring(index + 3);
-		}
-
-		index = domainName.indexOf('/');
-
-		if (index != -1) {
-			// keep everything before the '/'
-			domainName = domainName.substring(0, index);
-		}
-
-		// check for and remove a preceding 'www'
-		// followed by any sequence of characters (non-greedy)
-		// followed by a '.'
-		// from the beginning of the string
-		domainName = domainName.replaceFirst("^www.*?\\.", "");
-		System.out.println(domainName);
-		return domainName;
-	}
-
 }

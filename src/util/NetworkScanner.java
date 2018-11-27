@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.sun.javafx.PlatformUtil;
 
@@ -26,6 +28,10 @@ public class NetworkScanner extends Observable {
 	}
 
 	public void scan(String fromIP, String toIP, int fromPort, int toPort) {
+
+		int aliveIps = 0;
+		int deadIps = 0;
+		int openPorts = 0;
 		try {
 			this.isRunning = true;
 			final ExecutorService es = Executors.newFixedThreadPool(500);
@@ -35,47 +41,77 @@ public class NetworkScanner extends Observable {
 			for (String ipaddr : ipRange) {
 				if (!isRunning)
 					break;
-				String ping = ping(ipaddr);
-				System.out.println("PING IS " + ping);
 				if (isReachable(ipaddr)) {
+					aliveIps++;
+					String ping = ping(ipaddr);
 					for (int port = fromPort; port <= toPort; port++) {
 						if (!isRunning)
 							break;
 						futures.add(portIsOpen(es, ipaddr, port, timeout, ping));
 					}
 				} else {
+					deadIps++;
 					System.out.println(ipaddr + " is not reachable");
 				}
 			}
 			es.awaitTermination(200L, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-
+			// do nothing.
 		}
+
+		for (final Future<ScanResult> f : futures) {
+			try {
+				if (f.get().isOpen()) {
+					openPorts++;
+				}
+			} catch (InterruptedException e) {
+			} catch (ExecutionException e) {
+			}
+		}
+		/* send Summary to UI */
+		setChanged();
+		notifyObservers(new Summary(openPorts, (toPort - fromPort + 1) - openPorts, deadIps, aliveIps));
 	}
 
 	public void scanByDomainName(String domainName, int fromPort, int toPort) {
+		int aliveIps = 0;
+		int deadIps = 0;
+		int openPorts = 0;
 		try {
 			this.isRunning = true;
 			final ExecutorService es = Executors.newFixedThreadPool(500);
 			int timeout = 100;
 			futures = new ArrayList<>();
-			String ping = ping(domainName);
 			if (isReachable(domainName)) {
+				String ping = ping(domainName);
+				aliveIps++;
 				for (int port = fromPort; port <= toPort; port++) {
 					if (!isRunning)
 						break;
 					futures.add(portIsOpen(es, domainName, port, timeout, ping));
 				}
 			} else {
+				deadIps++;
 				System.out.println(domainName + " is not reachable");
 			}
 
 			es.awaitTermination(200L, TimeUnit.MILLISECONDS);
-		} catch (
-
-		InterruptedException e) {
+		} catch (InterruptedException e) {
 
 		}
+
+		for (final Future<ScanResult> f : futures) {
+			try {
+				if (f.get().isOpen()) {
+					openPorts++;
+				}
+			} catch (InterruptedException e) {
+			} catch (ExecutionException e) {
+			}
+		}
+		/* send Summary to UI */
+		setChanged();
+		notifyObservers(new Summary(openPorts, (toPort - fromPort + 1) - openPorts, deadIps, aliveIps));
 	}
 
 	public void stop() {

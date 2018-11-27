@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import util.Summary;
 
 public class DisplayResult {
 

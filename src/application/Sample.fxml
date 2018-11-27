@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.TableView?>
@@ -8,7 +13,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="554.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <children>
       <ImageView fitHeight="564.0" fitWidth="701.0" layoutY="-4.0" pickOnBounds="true">
          <image>
@@ -27,7 +32,6 @@
       <TextField fx:id="inputPort" layoutX="441.0" layoutY="67.0" prefHeight="27.0" prefWidth="240.0" />
       <TextField fx:id="text" layoutX="24.0" layoutY="67.0" prefHeight="27.0" prefWidth="391.0" promptText="Ex : 127.0.0.1" />
       <TextField fx:id="inputPort" layoutX="441.0" layoutY="67.0" prefHeight="27.0" prefWidth="240.0" promptText="Ex : 1-2000" />
-      <ProgressBar fx:id="bar" layoutX="21.0" layoutY="510.0" prefHeight="20.0" prefWidth="660.0" progress="0.0" />
       <Button fx:id="Stop" layoutX="129.0" layoutY="24.0" mnemonicParsing="false" onAction="#stop" prefHeight="32.0" prefWidth="74.0" text="Stop">
          <graphic>
             <ImageView fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
@@ -37,7 +41,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="Help" layoutX="604.0" layoutY="24.0" mnemonicParsing="false" onAction="#help" prefHeight="12.0" prefWidth="73.0" text="Help">
+      <Button fx:id="Help" layoutX="604.0" layoutY="24.0" mnemonicParsing="false" onAction="#help" prefHeight="12.0" prefWidth="73.0" text="Port">
          <graphic>
             <ImageView fx:id="helpBt" fitHeight="22.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -56,6 +60,10 @@
          </graphic></Button>
       <TableView fx:id="tableViewLeft" layoutX="22.0" layoutY="109.0" onMouseClicked="#handleMouseClick" prefHeight="387.0" prefWidth="393.0" />
       <TableView fx:id="tableViewRight" layoutX="441.0" layoutY="109.0" prefHeight="389.0" prefWidth="241.0" />
+      <Text fx:id="status" fill="WHITE" layoutX="24.0" layoutY="525.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status:">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Text>
       <Button fx:id="dnsBt" layoutX="366.0" layoutY="25.0" mnemonicParsing="false" onAction="#dns" prefHeight="31.0" prefWidth="49.0">
          <graphic>
             <ImageView fitHeight="21.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
