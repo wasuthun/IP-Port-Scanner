@@ -1,6 +1,7 @@
 package util;
 
 public class ScanResult {
+
 	private String ipaddr;
 	private int port;
 	private boolean isOpen;
