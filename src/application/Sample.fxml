@@ -21,7 +21,7 @@
             </ImageView>
          </graphic></Button>
       <ListView fx:id="view" layoutX="24.0" layoutY="109.0" onMouseClicked="#handleMouseClick" prefHeight="385.0" prefWidth="391.0" />
-      <TextField layoutX="24.0" layoutY="67.0" prefHeight="27.0" prefWidth="391.0" />
+      <TextField fx:id="text" layoutX="24.0" layoutY="67.0" prefHeight="27.0" prefWidth="391.0" />
       <TextField layoutX="441.0" layoutY="67.0" prefHeight="27.0" prefWidth="240.0" />
       <ProgressBar fx:id="bar" layoutX="21.0" layoutY="510.0" prefHeight="20.0" prefWidth="660.0" progress="0.0" />
       <ScrollBar layoutX="24.0" layoutY="477.0" prefHeight="17.0" prefWidth="391.0" />

@@ -16,28 +16,24 @@ import com.sun.javafx.PlatformUtil;
 
 public class NetworkScanner extends Observable {
 
-	private String fromIp;
-	private String toIp;
 	private int fromPort;
 	private int toPort;
 	private boolean isRunning;
 	List<Future<ScanResult>> futures;
 
-	public NetworkScanner(String fromIp, String toIp, int fromPort, int toPort) {
+	public NetworkScanner(int fromPort, int toPort) {
 		this.isRunning = false;
-		this.fromIp = fromIp;
-		this.toIp = toIp;
 		this.fromPort = fromPort;
 		this.toPort = toPort;
 	}
 
-	public void scan() {
+	public void scan(String fromIP,String toIP) {
 		try {
 			this.isRunning = true;
 			final ExecutorService es = Executors.newFixedThreadPool(500);
 			int timeout = 100;
 			futures = new ArrayList<>();
-			List<String> ipRange = getIpList(fromIp, toIp);
+			List<String> ipRange = getIpList(fromIP, toIP);
 			for (String ipaddr : ipRange) {
 				if (!isRunning)
 					break;
