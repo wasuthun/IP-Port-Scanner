@@ -58,7 +58,7 @@ public class NetworkObserver implements Observer {
 					Summary s = (Summary) arg;
 					controller.finished();
 					controller.setStatus("Reachable IP " + s.getAliveIPs() + " ,Unreachable IP " + s.getDeadIPs()
-							+ " ,Close port " + s.getClosePorts() + " ,Open Port " + s.getOpenPorts());
+							+ " ,Open Port " + s.getOpenPorts());
 					map.clear();
 				}
 
