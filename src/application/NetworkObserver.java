@@ -39,7 +39,14 @@ public class NetworkObserver implements Observer {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				if (arg instanceof ScanResult) {
+				 if (arg instanceof Summary) {
+					Summary s = (Summary) arg;
+					controller.finished();
+					controller.setStatus("Reachable IP " + s.getAliveIPs() + " ,Unreachable IP " + s.getDeadIPs()
+							+ " ,Open Port " + s.getOpenPorts());
+					map.clear();
+				}
+				 else if (arg instanceof ScanResult) {
 					ScanResult s = (ScanResult) arg;
 					controller.setStatus("Scanning... " + s.getIp() + " with port " + s.getPort());
 					if (s.isOpen()) {
@@ -54,13 +61,7 @@ public class NetworkObserver implements Observer {
 						map.put(s.getIp(), result);
 						list.add(result);
 					}
-				} else if (arg instanceof Summary) {
-					Summary s = (Summary) arg;
-					controller.finished();
-					controller.setStatus("Reachable IP " + s.getAliveIPs() + " ,Unreachable IP " + s.getDeadIPs()
-							+ " ,Open Port " + s.getOpenPorts());
-					map.clear();
-				}
+				} 
 			}
 		});
 	}
