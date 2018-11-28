@@ -6,9 +6,9 @@ IP-Port-Scanner is developed with Java and JavaFX. It can do 3 functions that is
 
 1st Func. = Find the IP-address from the input website in text format.
 
-2nd Func. = Find all ports that are opend in single input IP-address.
+2nd Func. = Find all ports that are opened in single input IP-address.
 
-3rd Func. = Find all ports that are opend in every ip-address from the range of ip-address input.
+3rd Func. = Find all ports that are opened in every ip-address from the range of ip-address input.
 
 # Tools
 
