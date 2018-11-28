@@ -24,7 +24,7 @@ IP-Port-Scanner is developed with Java and JavaFX. It can do 3 functions that is
 
 Make sure that your computer has installed Java Environment.
 
-Download the Network.jar file and Run it.
+Download the [Network.jar](https://github.com/wasuthun/IP-Port-Scanner/blob/master/Network.jar) file and Run it.
 
 # Members
 
