@@ -41,6 +41,7 @@ public class NetworkObserver implements Observer {
 			public void run() {
 				if (arg instanceof ScanResult) {
 					ScanResult s = (ScanResult) arg;
+					controller.setStatus("Scanning... " + s.getIp() + " with port " + s.getPort());
 					if (s.isOpen()) {
 						DisplayResult result = null;
 						if (map.containsKey(s.getIp())) {
@@ -51,7 +52,6 @@ public class NetworkObserver implements Observer {
 							result = new DisplayResult(s.getIp(), new Integer(s.getPort()), s.getPing());
 						}
 						map.put(s.getIp(), result);
-						controller.setStatus("Scanning... " + s.getIp() + " with port " + s.getPort());
 						list.add(result);
 					}
 				} else if (arg instanceof Summary) {
@@ -61,7 +61,6 @@ public class NetworkObserver implements Observer {
 							+ " ,Open Port " + s.getOpenPorts());
 					map.clear();
 				}
-
 			}
 		});
 	}
