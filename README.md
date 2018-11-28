@@ -1,6 +1,6 @@
 # IP-Port-Scanner
 
-This is the final project of 01219321 Data Communication & Computer Networks Program.
+This is the final project of 01219321 Data Communication & Computer Networks Program course.
 
 IP-Port-Scanner is developed with Java and JavaFX. It can do 3 functions that is related to DNS, ping, IP-address, Ports.
 
