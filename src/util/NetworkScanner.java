@@ -111,7 +111,7 @@ public class NetworkScanner extends Observable {
 		}
 		/* send Summary to UI */
 		setChanged();
-		notifyObservers(new Summary(openPorts, (toPort - fromPort + 1) - openPorts, deadIps, aliveIps));
+		notifyObservers(new Summary(openPorts, (futures.size()) - openPorts, deadIps, aliveIps));
 	}
 
 	public void stop() {
