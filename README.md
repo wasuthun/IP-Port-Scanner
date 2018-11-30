@@ -28,7 +28,7 @@ Download the [Network.jar](https://github.com/wasuthun/IP-Port-Scanner/blob/mast
 
 # Members
 
-1. Wongsathorn Panichkurkul 591054581 [Github](https://github.com/kakmond)
+1. Wongsathorn Panichkurkul 5910545817 [Github](https://github.com/kakmond)
 
 2. Wasuthun wanaphongthipakorn 5910545841 [Github](https://github.com/wasuthun)
 
